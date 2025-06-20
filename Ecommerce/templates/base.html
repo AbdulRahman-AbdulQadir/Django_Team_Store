@@ -6,6 +6,16 @@
   <title>{% block title %}Default Title{% endblock %}</title>
 
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    function dismissMessage(id) {
+        const el = document.getElementById(id);
+        // fade out...
+        el.classList.add('fade-out');
+        // then remove from DOM
+        setTimeout(() => el.remove(), 300);
+    }
+  </script>
+
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
     rel="stylesheet"
@@ -15,7 +25,35 @@
     body {
       font-family: 'Inter', sans-serif;
       background-color: #f8fafc; /* Light Slate 50 */
+    .message {
+    position: relative;
+    padding: 1rem 1.5rem;
+    margin-bottom: 1rem;
+    border: 1px solid #f9c851;
+    background-color: #fff8e1;
+    color: #856404;
+    border-radius: 0.25rem;
+    font-family: sans-serif;
+    width: 50%; /* Set width to half */
+  }
+
+    .message .close-btn {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.75rem;
+        background: transparent;
+        border: none;
+        font-size: 1.2rem;
+        line-height: 1;
+        cursor: pointer;
+        color: inherit;
     }
+
+    .message.fade-out {
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+        }
   </style>
 
   {% block extra_head %}{% endblock %}
@@ -23,15 +61,21 @@
 <body class="antialiased">
     <div class="min-h-screen flex flex-col">
         <header class="bg-white shadow-sm p-4 md:p-6 flex items-center justify-between">
-            <div class="text-2xl font-bold text-gray-800 rounded-md">BrandLogo</div>
+            <div class="text-2xl font-bold text-gray-800 rounded-md">Store Here</div>
             <nav class="hidden md:flex space-x-6">
                 <a href="{% url 'home' %}" class="text-gray-600 hover:text-indigo-600 transition-colors duration-200 rounded-md">Home</a>
                 <a href="#" class="text-gray-600 hover:text-indigo-600 transition-colors duration-200 rounded-md">Shop</a>
                 <a href="#" class="text-gray-600 hover:text-indigo-600 transition-colors duration-200 rounded-md">Categories</a>
                 <a href="{% url 'about' %}" class="text-gray-600 hover:text-indigo-600 transition-colors duration-200 rounded-md">About Us</a>
+                {% if user.is_authenticated %}
+                <a href="{% url 'logout' %}" class="text-gray-600 hover:text-indigo-600 transition-colors duration-200 rounded-md">Logout</a>
+                {% else %}
+                <a href="{% url 'login' %}" class="text-gray-600 hover:text-indigo-600 transition-colors duration-200 rounded-md">Login</a>
+                <a href="{% url 'register' %}" class="text-gray-600 hover:text-indigo-600 transition-colors duration-200 rounded-md">Register</a>
+                {% endif %}
                 <a href="{% url 'contact_us' %}" class="text-gray-600 hover:text-indigo-600 transition-colors duration-200 rounded-md">Contact</a>
             </nav>
-        <div class="flex items-center space-x-4">
+            <div class="flex items-center space-x-4">
                 <div class="relative hidden md:block">
                     <input type="text" placeholder="Search products..." class="pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 w-64">
                     <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
@@ -43,8 +87,19 @@
                 <button class="md:hidden p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors duration-200">
                     <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                 </button>
-        </div>
+            </div>
+            
         </header>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="message" id="msg-{{ forloop.counter }}">
+                {{ message }}
+                <button class="close-btn"
+                        onclick="dismissMessage('msg-{{ forloop.counter }}')"
+                        aria-label="Close">&times;</button>
+                </div>
+            {% endfor %}
+        {% endif %}
   {% block content %}{% endblock %}
           <footer class="bg-gray-800 text-white p-8 mt-12 rounded-t-xl">
             <div class="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
