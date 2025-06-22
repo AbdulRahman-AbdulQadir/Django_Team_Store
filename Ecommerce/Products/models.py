@@ -16,10 +16,18 @@ class Category(models.Model):
 class Product(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
+    short_description = models.CharField(max_length=255, blank=True)
+    brand = models.CharField(max_length=100, blank=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products')
     price = models.DecimalField(max_digits=10, decimal_places=2)
+    color = models.CharField(max_length=50, blank=True)
     is_active = models.BooleanField(default=True)
     image = models.ImageField(upload_to='uploads/products/', blank=True, null=True)
+    image_1 = models.ImageField(upload_to='uploads/products/', blank=True, null=True)
+    image_2 = models.ImageField(upload_to='uploads/products/', blank=True, null=True)
+    image_3 = models.ImageField(upload_to='uploads/products/', blank=True, null=True)
+    image_4 = models.ImageField(upload_to='uploads/products/', blank=True, null=True)
+    review_count = models.PositiveIntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

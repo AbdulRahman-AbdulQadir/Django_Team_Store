@@ -7,7 +7,7 @@
         <main class="flex-grow container mx-auto px-4 py-8">
             <div class="flex flex-col md:flex-row gap-8 bg-white rounded-xl shadow-md p-6 md:p-8">
                 <div class="w-full md:w-1/2 flex flex-col items-center">
-                    <img src="https://placehold.co/600x450/E0F2F7/27272A?text=Main+Product+Image" alt="Main Product Image" class="w-full h-auto rounded-xl shadow-lg mb-4 object-cover">
+                    <img src="{{ product.image.url }}">
                     <div class="flex space-x-4 overflow-x-auto pb-2">
                         <img src="https://placehold.co/100x75/E0F2F7/27272A?text=Thumb1" alt="Thumbnail 1" class="w-24 h-18 rounded-lg border-2 border-indigo-600 cursor-pointer object-cover">
                         <img src="https://placehold.co/100x75/E0F2F7/27272A?text=Thumb2" alt="Thumbnail 2" class="w-24 h-18 rounded-lg border-2 border-transparent hover:border-indigo-600 cursor-pointer object-cover">
@@ -17,7 +17,7 @@
                 </div>
 
                 <div class="w-full md:w-1/2">
-                    <h1 class="text-4xl font-extrabold text-gray-800 mb-2">Premium Noise-Cancelling Headphones</h1>
+                    <h1 class="text-4xl font-extrabold text-gray-800 mb-2">{{ product.name }}</h1>
                     <p class="text-gray-600 text-lg mb-4">Brand: AudioTech</p>
                     <div class="flex items-center mb-4">
                         <div class="flex text-yellow-400">
@@ -31,12 +31,12 @@
                     </div>
 
                     <p class="text-gray-700 text-base leading-relaxed mb-6">
-                        Experience unparalleled audio quality with these premium noise-cancelling headphones. Designed for comfort and immersive sound, they are perfect for travel, work, or simply enjoying your favorite music without distraction.
+                        {{ product.description }}
                     </p>
 
                     <div class="mb-6">
-                        <span class="text-5xl font-extrabold text-indigo-600">$129.99</span>
-                        <span class="text-xl text-gray-500 line-through ml-3">$149.99</span>
+                        <span class="text-5xl font-extrabold text-indigo-600">${{ product.price }}</span>
+                        <!-- <span class="text-xl text-gray-500 line-through ml-3">$149.99</span> -->
                     </div>
 
                     <div class="mb-6">
@@ -56,14 +56,20 @@
                             <button class="bg-gray-200 text-gray-700 w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-300 transition-colors duration-200 text-xl font-bold">+</button>
                         </div>
                     </div>
-
-                    <div class="flex flex-col sm:flex-row gap-4">
+                    {% if not product.is_active %}
+                        <div class="flex flex-col sm:flex-row gap-4">
+                        <button class="flex-1 bg-indigo-600 text-white py-4 rounded-full text-lg font-semibold hover:bg-indigo-700 transition-colors duration-200 shadow-lg transform hover:scale-105">
+                            SOON
+                        </button>
+                    {% else %}
+                        <div class="flex flex-col sm:flex-row gap-4">
                         <button class="flex-1 bg-indigo-600 text-white py-4 rounded-full text-lg font-semibold hover:bg-indigo-700 transition-colors duration-200 shadow-lg transform hover:scale-105">
                             Add to Cart
                         </button>
                         <button class="flex-1 bg-white text-indigo-600 border border-indigo-600 py-4 rounded-full text-lg font-semibold hover:bg-indigo-50 transition-colors duration-200 shadow-lg transform hover:scale-105">
                             Buy Now
                         </button>
+                    {% endif %}
                     </div>
                 </div>
             </div>

@@ -3,179 +3,142 @@
 <html lang="en">
 {% block title %} Product Listing Page {% endblock %}
 {% block content %}
+{# Load your custom tags here #}
+{% load web_tags %}
 <body class="antialiased">
-        <main class="flex-grow container mx-auto px-4 py-8">
-            <h1 class="text-4xl font-extrabold text-gray-800 mb-8 text-center">All Products</h1>
+    <main class="flex-grow container mx-auto px-4 py-8">
+        <h1 class="text-4xl font-extrabold text-gray-800 mb-8 text-center">All Products</h1>
 
-            <div class="flex flex-col md:flex-row gap-8">
-                <aside class="w-full md:w-1/4 bg-white rounded-xl shadow-md p-6">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-6">Filters</h2>
+        <div class="flex flex-col md:flex-row gap-8">
+            <aside class="w-full md:w-1/4 bg-white rounded-xl shadow-md p-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">Filters</h2>
 
-                    <div class="mb-6">
-                        <h3 class="text-lg font-semibold text-gray-700 mb-3">Category</h3>
-                        <div class="space-y-2">
-                            <label class="flex items-center">
-                                <input type="checkbox" class="form-checkbox text-indigo-600 rounded-md">
-                                <span class="ml-2 text-gray-700">Electronics</span>
-                            </label>
-                            <label class="flex items-center">
-                                <input type="checkbox" class="form-checkbox text-indigo-600 rounded-md">
-                                <span class="ml-2 text-gray-700">Apparel</span>
-                            </label>
-                            <label class="flex items-center">
-                                <input type="checkbox" class="form-checkbox text-indigo-600 rounded-md">
-                                <span class="ml-2 text-gray-700">Home Goods</span>
-                            </label>
-                            <label class="flex items-center">
-                                <input type="checkbox" class="form-checkbox text-indigo-600 rounded-md">
-                                <span class="ml-2 text-gray-700">Books</span>
-                            </label>
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold text-gray-700 mb-3">Category</h3>
+                    <div class="space-y-2">
+                        {# Wrap the filter options in a form to submit them #}
+                        <form method="GET" action="{% url 'product_listing_page' %}">
+                            {% for cat in categories %}
+                                <label class="flex items-center">
+                                    <input type="checkbox"
+                                           name="category"
+                                           value="{{ cat.name }}"
+                                           class="form-checkbox text-indigo-600 rounded-md"
+                                           {% if cat.name in selected_categories %}checked{% endif %}>
+                                    <span class="ml-2 text-gray-700">{{ cat.name }}</span>
+                                </label>
+                            {% endfor %}
+                            </div>
                         </div>
+
+                        <div class="mb-6">
+                            <h3 class="text-lg font-semibold text-gray-700 mb-3">Price Range</h3>
+                            <input type="range" min="0" max="500" value="250" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-indigo-600">
+                            <div class="flex justify-between text-sm text-gray-600 mt-2">
+                                <span>$0</span>
+                                <span>$500+</span>
+                            </div>
+                        </div>
+
+                        <div class="mb-6">
+                            <h3 class="text-lg font-semibold text-gray-700 mb-3">Brand</h3>
+                            <input type="text" placeholder="Search brand..." class="w-full p-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500">
+                            <div class="space-y-2 mt-2 max-h-32 overflow-y-auto">
+                                <label class="flex items-center">
+                                    <input type="checkbox" class="form-checkbox text-indigo-600 rounded-md">
+                                    <span class="ml-2 text-gray-700">Brand A</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" class="form-checkbox text-indigo-600 rounded-md">
+                                    <span class="ml-2 text-gray-700">Brand B</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" class="form-checkbox text-indigo-600 rounded-md">
+                                    <span class="ml-2 text-gray-700">Brand C</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" class="form-checkbox text-indigo-600 rounded-md">
+                                    <span class="ml-2 text-gray-700">Brand D</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="w-full bg-indigo-600 text-white py-3 rounded-full hover:bg-indigo-700 transition-colors duration-200 shadow-md">
+                            Apply Filters
+                        </button>
+                    </form>
+            </aside>
+
+            <section class="w-full md:w-3/4">
+                <div class="flex justify-between items-center mb-6">
+                    <p class="text-gray-600">
+                        Showing 
+                        {% if page_obj.paginator.count == 0 %}
+                            0 products
+                        {% else %}
+                            {{ page_obj.start_index }}
+                            -
+                            {{ page_obj.end_index }}
+                            of 
+                            {{ page_obj.paginator.count }}
+                            products
+                        {% endif %}
+                    </p>
+                    <div class="flex items-center space-x-2">
+                        <label for="sort" class="text-gray-700">Sort by:</label>
+                        <select id="sort" class="p-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500">
+                            <option>Relevance</option>
+                            <option>Price: Low to High</option>
+                            <option>Price: High to Low</option>
+                            <option>Newest Arrivals</option>
+                        </select>
                     </div>
-
-                    <div class="mb-6">
-                        <h3 class="text-lg font-semibold text-gray-700 mb-3">Price Range</h3>
-                        <input type="range" min="0" max="500" value="250" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-indigo-600">
-                        <div class="flex justify-between text-sm text-gray-600 mt-2">
-                            <span>$0</span>
-                            <span>$500+</span>
-                        </div>
-                    </div>
-
-                    <div class="mb-6">
-                        <h3 class="text-lg font-semibold text-gray-700 mb-3">Brand</h3>
-                        <input type="text" placeholder="Search brand..." class="w-full p-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500">
-                        <div class="space-y-2 mt-2 max-h-32 overflow-y-auto">
-                            <label class="flex items-center">
-                                <input type="checkbox" class="form-checkbox text-indigo-600 rounded-md">
-                                <span class="ml-2 text-gray-700">Brand A</span>
-                            </label>
-                            <label class="flex items-center">
-                                <input type="checkbox" class="form-checkbox text-indigo-600 rounded-md">
-                                <span class="ml-2 text-gray-700">Brand B</span>
-                            </label>
-                            <label class="flex items-center">
-                                <input type="checkbox" class="form-checkbox text-indigo-600 rounded-md">
-                                <span class="ml-2 text-gray-700">Brand C</span>
-                            </label>
-                            <label class="flex items-center">
-                                <input type="checkbox" class="form-checkbox text-indigo-600 rounded-md">
-                                <span class="ml-2 text-gray-700">Brand D</span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <button class="w-full bg-indigo-600 text-white py-3 rounded-full hover:bg-indigo-700 transition-colors duration-200 shadow-md">
-                        Apply Filters
-                    </button>
-                </aside>
-
-                <section class="w-full md:w-3/4">
-                    <div class="flex justify-between items-center mb-6">
-                        <p class="text-gray-600">Showing 1-12 of 100+ products</p>
-                        <div class="flex items-center space-x-2">
-                            <label for="sort" class="text-gray-700">Sort by:</label>
-                            <select id="sort" class="p-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500">
-                                <option>Relevance</option>
-                                <option>Price: Low to High</option>
-                                <option>Price: High to Low</option>
-                                <option>Newest Arrivals</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                        <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300">
-                            <img src="https://placehold.co/400x300/E0F2F7/27272A?text=Product+1" alt="Product Name" class="w-full h-48 object-cover">
-                            <div class="p-6">
-                                <h3 class="text-xl font-semibold text-gray-800 mb-2">Stylish Headphones</h3>
-                                <p class="text-gray-600 text-sm mb-4">Immersive sound experience with comfortable design.</p>
-                                <div class="flex items-center justify-between">
-                                    <span class="text-2xl font-bold text-indigo-600">$129.99</span>
-                                    <button class="bg-indigo-600 text-white py-2 px-4 rounded-full hover:bg-indigo-700 transition-colors duration-200">
-                                        Add to Cart
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300">
-                            <img src="https://placehold.co/400x300/FCE7F3/27272A?text=Product+2" alt="Product Name" class="w-full h-48 object-cover">
-                            <div class="p-6">
-                                <h3 class="text-xl font-semibold text-gray-800 mb-2">Smartwatch Pro</h3>
-                                <p class="text-gray-600 text-sm mb-4">Track your fitness and stay connected on the go.</p>
-                                <div class="flex items-center justify-between">
-                                    <span class="text-2xl font-bold text-indigo-600">$199.00</span>
-                                    <button class="bg-indigo-600 text-white py-2 px-4 rounded-full hover:bg-indigo-700 transition-colors duration-200">
-                                        Add to Cart
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300">
-                            <img src="https://placehold.co/400x300/D1FAE5/27272A?text=Product+3" alt="Product Name" class="w-full h-48 object-cover">
-                            <div class="p-6">
-                                <h3 class="text-xl font-semibold text-gray-800 mb-2">Minimalist Backpack</h3>
-                                <p class="text-gray-600 text-sm mb-4">Durable and sleek design for daily adventures.</p>
-                                <div class="flex items-center justify-between">
-                                    <span class="text-2xl font-bold text-indigo-600">$75.50</span>
-                                    <button class="bg-indigo-600 text-white py-2 px-4 rounded-full hover:bg-indigo-700 transition-colors duration-200">
-                                        Add to Cart
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300">
-                            <img src="https://placehold.co/400x300/FEE2E2/27272A?text=Product+4" alt="Product Name" class="w-full h-48 object-cover">
-                            <div class="p-6">
-                                <h3 class="text-xl font-semibold text-gray-800 mb-2">Ergonomic Chair</h3>
-                                <p class="text-gray-600 text-sm mb-4">Comfort and support for long hours at your desk.</p>
-                                <div class="flex items-center justify-between">
-                                    <span class="text-2xl font-bold text-indigo-600">$349.00</span>
-                                    <button class="bg-indigo-600 text-white py-2 px-4 rounded-full hover:bg-indigo-700 transition-colors duration-200">
-                                        Add to Cart
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300">
-                            <img src="https://placehold.co/400x300/E5E7EB/27272A?text=Product+5" alt="Product Name" class="w-full h-48 object-cover">
-                            <div class="p-6">
-                                <h3 class="text-xl font-semibold text-gray-800 mb-2">Wireless Earbuds</h3>
-                                <p class="text-gray-600 text-sm mb-4">Crystal clear audio with long-lasting battery.</p>
-                                <div class="flex items-center justify-between">
-                                    <span class="text-2xl font-bold text-indigo-600">$89.99</span>
-                                    <button class="bg-indigo-600 text-white py-2 px-4 rounded-full hover:bg-indigo-700 transition-colors duration-200">
-                                        Add to Cart
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300">
-                            <img src="https://placehold.co/400x300/D1FAE5/27272A?text=Product+6" alt="Product Name" class="w-full h-48 object-cover">
-                            <div class="p-6">
-                                <h3 class="text-xl font-semibold text-gray-800 mb-2">Portable Speaker</h3>
-                                <p class="text-gray-600 text-sm mb-4">Powerful sound in a compact, travel-friendly design.</p>
-                                <div class="flex items-center justify-between">
-                                    <span class="text-2xl font-bold text-indigo-600">$59.00</span>
-                                    <button class="bg-indigo-600 text-white py-2 px-4 rounded-full hover:bg-indigo-700 transition-colors duration-200">
-                                        Add to Cart
-                                    </button>
-                                </div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {% for product in page_obj %}
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300">
+                        <img src="{{ product.image.url }}" alt="Product Name" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h3 class="text-xl font-semibold text-gray-800 mb-2">{{ product.name }}</h3>
+                            <p class="text-gray-600 text-sm mb-4">{{ product.description }}</p>
+                            <div class="flex items-center justify-between">
+                                <span class="text-2xl font-bold text-indigo-600">${{ product.price }}</span>
+                                <button class="bg-indigo-600 text-white py-2 px-4 rounded-full hover:bg-indigo-700 transition-colors duration-200">
+                                    Add to Cart
+                                </button>
                             </div>
                         </div>
                     </div>
+                    {% empty %}
+                        <p>No products found.</p>
+                    {% endfor %} 
+                </div>
 
-                    <div class="flex justify-center mt-12 space-x-2">
-                        <button class="bg-white text-gray-600 py-2 px-4 rounded-lg shadow-md hover:bg-gray-100 transition-colors duration-200">Previous</button>
-                        <button class="bg-indigo-600 text-white py-2 px-4 rounded-lg shadow-md">1</button>
-                        <button class="bg-white text-gray-600 py-2 px-4 rounded-lg shadow-md hover:bg-gray-100 transition-colors duration-200">2</button>
-                        <button class="bg-white text-gray-600 py-2 px-4 rounded-lg shadow-md hover:bg-gray-100 transition-colors duration-200">3</button>
-                        <button class="bg-white text-gray-600 py-2 px-4 rounded-lg shadow-md hover:bg-gray-100 transition-colors duration-200">Next</button>
-                    </div>
-                </section>
-            </div>
-        </main>
-    </div>
+                <div class="flex justify-center mt-12 space-x-2">
+                    {# Use the custom filter to get the query string without 'page' #}
+                    {% with request.GET|query_string_exclude:"page" as filtered_query_string %}
+                        {% if page_obj.has_previous %}
+                            <a href="?page=1{% if filtered_query_string %}&{{ filtered_query_string }}{% endif %}" class="bg-white text-gray-600 py-2 px-4 rounded-lg shadow-md hover:bg-gray-100 transition-colors duration-200">&laquo; first</a>
+                            <a href="?page={{ page_obj.previous_page_number }}{% if filtered_query_string %}&{{ filtered_query_string }}{% endif %}" class="bg-white text-gray-600 py-2 px-4 rounded-lg shadow-md hover:bg-gray-100 transition-colors duration-200">Previous</a>
+                        {% endif %}
+
+                        {% for num in page_obj.paginator.page_range %}
+                            {% if page_obj.number == num %}
+                                <a href="#" class="bg-indigo-600 text-white py-2 px-4 rounded-lg shadow-md">{{ num }}</a>
+                            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                                <a href="?page={{ num }}{% if filtered_query_string %}&{{ filtered_query_string }}{% endif %}" class="bg-white text-gray-600 py-2 px-4 rounded-lg shadow-md hover:bg-gray-100 transition-colors duration-200">{{ num }}</a>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if page_obj.has_next %}
+                            <a href="?page={{ page_obj.next_page_number }}{% if filtered_query_string %}&{{ filtered_query_string }}{% endif %}" class="bg-white text-gray-600 py-2 px-4 rounded-lg shadow-md hover:bg-gray-100 transition-colors duration-200">Next</a>
+                            <a href="?page={{ page_obj.paginator.num_pages }}{% if filtered_query_string %}&{{ filtered_query_string }}{% endif %}" class="bg-white text-gray-600 py-2 px-4 rounded-lg shadow-md hover:bg-gray-100 transition-colors duration-200">last &raquo;</a>
+                        {% endif %}
+                    {% endwith %}
+                </div>
+            </section>
+        </div>
+    </main>
 </body>
 {% endblock %}
 </html>
