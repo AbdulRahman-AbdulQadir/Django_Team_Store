@@ -15,50 +15,64 @@
                 <!-- Individual Cart Item -->
                 {% if cart_products %}
                 {% for product in cart_products %}
-                <div class="flex flex-col sm:flex-row items-center border-b border-gray-200 py-4 last:border-b-0">        
-                    <img src="{{ product.image.url }}" alt="Product 1" class="w-24 h-24 object-cover rounded-lg mr-4 mb-4 sm:mb-0">
-                    <div class="flex-grow text-center sm:text-left">
-                        <h2 class="text-xl font-semibold text-gray-800">{{ product.name }}</h2>
-                        <p class="text-gray-600">Color: {{ product.color }}</p>
-                        <p class="text-lg font-bold text-indigo-600 mt-1">${{ product.price }}</p>
-                    </div>
-                    <div class="flex items-center space-x-3 mt-4 sm:mt-0">
-                        <span class="uppercase text-sm font-medium text-gray-600">Quantity:</span>
-                        <div class="inline-flex items-center border border-gray-200 rounded-lg overflow-hidden">
-                            <button
-                            class="px-3 py-1 text-lg font-bold text-gray-700 bg-gray-100 hover:bg-gray-200 transition-colors duration-200">
-                            −
-                            </button>
-                            <input
-                            id="qty-cart"
-                            type="text"
-                            value=
-                            {% for key, value in quantities.items %}
-                                {% if key == product.id|slugify %}
-                                    "{{ value }}"
-                                {% endif %}
-                            {% endfor %}
-                            
-                            readonly
-                            class="w-12 text-center text-xl font-semibold text-gray-800 bg-white focus:outline-none"
-                            />
-                            <button
-                            class="px-3 py-1 text-lg font-bold text-gray-700 bg-gray-100 hover:bg-gray-200 transition-colors duration-200">
-                            +
-                            </button>
-                        </div>
-                    </div>
-                    <button class="ml-0 sm:ml-6 text-red-500 hover:text-red-700 transition-colors duration-200 mt-4 sm:mt-0">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                    </button>
-                </div>
+<div class="flex flex-col sm:flex-row items-center border-b border-gray-200 py-4 last:border-b-0">        
+    <img src="{{ product.image.url }}" alt="Product 1" class="w-24 h-24 object-cover rounded-lg mr-4 mb-4 sm:mb-0">
+    <div class="flex-grow text-center sm:text-left">
+        <h2 class="text-xl font-semibold text-gray-800">{{ product.name }}</h2>
+        <p class="text-gray-600">Color: {{ product.color }}</p>
+        <p class="text-lg font-bold text-indigo-600 mt-1">${{ product.price }}</p>
+    </div>
+    <div class="flex items-center space-x-3 mt-4 sm:mt-0">
+        <span class="uppercase text-sm font-medium text-gray-600">Quantity:</span>
+        <!-- Add data-product-id to wrapper for JS access -->
+        <div class="inline-flex items-center border border-gray-200 rounded-lg overflow-hidden" data-product-id="{{ product.id }}">
+            <button
+            class="px-3 py-1 text-lg font-bold text-gray-700 bg-gray-100 hover:bg-gray-200 transition-colors duration-200">
+            −
+            </button>
+            <input
+            class="qty-cart w-12 text-center text-xl font-semibold text-gray-800 bg-white focus:outline-none"
+            type="text"
+            value={% for key, value in quantities.items %}{% if key == product.id|slugify %}{{ value }}{% endif %}{% endfor %}
+            readonly
+            min="1"
+            data-product-id="{{ product.id }}"
+            />
+            <button
+            class="px-3 py-1 text-lg font-bold text-gray-700 bg-gray-100 hover:bg-gray-200 transition-colors duration-200">
+            +
+            </button>
+        </div>
+    </div>
+    <!-- Update button -->
+    <!-- Update button: add a unique class -->
+<button 
+    class="update-btn ml-4 sm:ml-6 mt-4 sm:mt-0 px-4 py-2 bg-blue-500 text-white font-medium rounded-lg shadow hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-colors duration-200"
+    data-product-id="{{ product.id }}">
+    Update
+</button>
+
+    <!-- Remove button -->
+   <!-- Remove button: just add the class, everything else untouched -->
+<button
+  class="remove-btn ml-4 sm:ml-6 text-red-500 hover:text-red-700 transition-colors duration-200 mt-4 sm:mt-0"
+  data-product-id="{{ product.id }}"
+>
+  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+  </svg>
+</button>
+
+</div>
+{% endfor %}
+
                 <div class="flex flex-col sm:flex-row justify-between items-center mt-6 space-y-4 sm:space-y-0">
                     <a href="{% url 'product_listing_page' %}" class="inline-block px-6 py-2 bg-indigo-600 text-white font-medium rounded-full shadow hover:bg-indigo-700 transition-colors duration-200">
                         Continue Shopping
                     </a>
                     <button class="text-gray-500 hover:text-gray-700 transition-colors duration-200 rounded-md">Clear Cart</button>
                 </div>
-                {% endfor %}
                 {% else %}
                 <div class="flex flex-col items-center justify-center py-16 space-y-6 border border-gray-200 rounded-lg bg-gray-50">
                     <!-- Icon / Illustration -->
@@ -90,7 +104,7 @@
                 <div class="space-y-3 mb-6">
                     <div class="flex justify-between text-gray-700">
                         <span>Subtotal</span>
-                        <span>$404.49</span>
+                        <span>${{ totals }}</span>
                     </div>
                     <div class="flex justify-between text-gray-700">
                         <span>Shipping</span>
@@ -98,11 +112,11 @@
                     </div>
                     <div class="flex justify-between text-gray-700">
                         <span>Tax (5%)</span>
-                        <span>$20.22</span>
+                        <span>$0</span>
                     </div>
                     <div class="flex justify-between font-bold text-xl text-gray-800 border-t border-gray-200 pt-4">
                         <span>Total</span>
-                        <span>$434.71</span>
+                        <span>${{ grand_total }}</span>
                     </div>
                 </div>
 
@@ -115,31 +129,10 @@
 </body>
 <script>
   $(function(){
-    var $input = $('#qty-cart');
-    var $wrapper = $input.closest('.inline-flex');
-    var $btnDec = $wrapper.find('button').first();
-    var $btnInc = $wrapper.find('button').last();
-    var min = 1;
-
-    $btnInc.on('click', function(e){
-      e.preventDefault();
-      var current = parseInt($input.val(), 10) || min;
-      $input.val(current + 1).trigger('change');
-    });
-
-    $btnDec.on('click', function(e){
-      e.preventDefault();
-      var current = parseInt($input.val(), 10) || min;
-      if (current > min) {
-        $input.val(current - 1).trigger('change');
-      }
-    });
-  });
-   $(function(){
-    // for each inline‐flex wrapper (your +/- + input group)
+    // For each quantity picker group
     $('.inline-flex').each(function(){
       var $wrapper = $(this);
-      var $input   = $wrapper.find('#qty-cart');         // grabs this picker’s input
+      var $input   = $wrapper.find('.qty-cart');         // this group's input
       var $btns    = $wrapper.find('button');            // [decrease, increase]
       var $dec     = $btns.first();
       var $inc     = $btns.last();
@@ -160,8 +153,61 @@
       });
     });
   });
+//   Grab the product id
+// only your Update button needs to trigger this—
+$(document).on('click', 'button[data-product-id]', function(e){
+  e.preventDefault();
+
+  // 1) product ID is fine:
+  const productId = $(this).data('product-id');
+
+  // 2) grab the qty from the same parent container:
+  const newQty = $(this)
+    .parent()                // the .flex container around both inline-flex + button
+    .find('.qty-cart')       // finds the input in that container
+    .val();
+
+  // 3) AJAX exactly as before:
+  $.ajax({
+    type: 'POST',
+    url: "{% url 'cart_update' %}",
+    data: {
+      product_id:          productId,
+      product_qty:         newQty,                 // now non-null
+      csrfmiddlewaretoken: '{{ csrf_token }}',
+      action:              'post'
+    },
+    success: function(json){
+      location.reload();
+    },
+    error: function(xhr, errmsg, err){
+      // …
+    }
+  });
+});
+// Remove‐handler: targets only your Remove button
+$(document).on('click', '.remove-btn[data-product-id]', function(e){
+  e.preventDefault();
+
+  const productId = $(this).data('product-id');
+
+  $.ajax({
+    type: 'POST',
+    url: "{% url 'cart_delete' %}",              // assumes you have a 'cart_remove' view
+    data: {
+      product_id: productId,
+      csrfmiddlewaretoken: '{{ csrf_token }}',
+      action: 'post'
+    },
+    success: function(json){
+      location.reload();
+    },
+    error: function(xhr, errmsg, err){
+      // optional: show an error
+    }
+  });
+});
 </script>
 
 {% endblock %}
-
 </html>
