@@ -3,6 +3,7 @@ from .cart import Cart
 from Products.models import Product
 from django.http import JsonResponse
 from decimal import Decimal
+from django.contrib import messages
 # Create your views here.
 def cart_summary(request):
     cart = Cart(request)
@@ -22,6 +23,7 @@ def cart_add(request):
         cart.add(product=product, quantity=product_qty)
         cart_quantity = cart.__len__()
         response = JsonResponse({'qty': cart_quantity})
+        messages.success(request, ("Product Added To Cart..."))
         return response 
 def cart_delete(request):
     cart = Cart(request)
@@ -29,6 +31,7 @@ def cart_delete(request):
         product_id = int(request.POST.get('product_id'))
         cart.delete(product=product_id)
         response = JsonResponse({'product':product_id})
+        messages.success(request, ("Item Deleted From Shopping Cart..."))
     # return redirect('cart_summary')
     return response
     return render(request, 'cart/cart_delete.html', {})
@@ -39,5 +42,6 @@ def cart_update(request):
         product_qty = int(request.POST.get('product_qty'))
         cart.update(product=product_id, quantity=product_qty)
         response = JsonResponse({'qty':product_qty})
+        messages.success(request, ("Your Car Has Been Updated ..."))
     # return redirect('cart_summary')
     return response
