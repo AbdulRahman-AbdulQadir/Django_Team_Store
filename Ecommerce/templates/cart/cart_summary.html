@@ -71,7 +71,14 @@
                     <a href="{% url 'product_listing_page' %}" class="inline-block px-6 py-2 bg-indigo-600 text-white font-medium rounded-full shadow hover:bg-indigo-700 transition-colors duration-200">
                         Continue Shopping
                     </a>
-                    <button class="text-gray-500 hover:text-gray-700 transition-colors duration-200 rounded-md">Clear Cart</button>
+                    <button
+  class="clear-cart-btn text-gray-500 hover:text-gray-700 rounded-md"
+  data-action="post"
+>
+  Clear Cart
+</button>
+
+
                 </div>
                 {% else %}
                 <div class="flex flex-col items-center justify-center py-16 space-y-6 border border-gray-200 rounded-lg bg-gray-50">
@@ -204,6 +211,23 @@ $(document).on('click', '.remove-btn[data-product-id]', function(e){
     },
     error: function(xhr, errmsg, err){
       // optional: show an error
+    }
+  });
+});
+$(document).on('click', '.clear-cart-btn', function(e) {
+  e.preventDefault();
+  $.ajax({
+    type: 'POST',
+    url: "{% url 'cart_clear' %}",
+    data: {
+      action: 'post',
+      csrfmiddlewaretoken: '{{ csrf_token }}'
+    },
+    success: function() {
+      location.reload();
+    },
+    error: function(xhr, errmsg, err) {
+      console.error("Clear cart failed:", errmsg);
     }
   });
 });

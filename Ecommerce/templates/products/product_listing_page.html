@@ -18,6 +18,9 @@
                     <div class="space-y-2">
                         {# Wrap the filter options in a form to submit them #}
                         <form method="GET" action="{% url 'product_listing_page' %}">
+                            {% if request.GET.q %}
+                            <input type="hidden" name="q" value="{{ request.GET.q }}">
+                            {% endif %}
                             {% for cat in categories %}
                                 <label class="flex items-center">
                                     <input type="checkbox"

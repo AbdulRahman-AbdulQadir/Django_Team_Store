@@ -34,7 +34,7 @@ def cart_delete(request):
         messages.success(request, ("Item Deleted From Shopping Cart..."))
     # return redirect('cart_summary')
     return response
-    return render(request, 'cart/cart_delete.html', {})
+    # return render(request, 'cart/cart_delete.html', {})
 def cart_update(request):
     cart = Cart(request)
     if request.POST.get('action') == 'post':
@@ -45,3 +45,11 @@ def cart_update(request):
         messages.success(request, ("Your Car Has Been Updated ..."))
     # return redirect('cart_summary')
     return response
+
+def cart_clear(request):
+    if request.method == "POST" and request.POST.get('action') == 'post':
+        cart = Cart(request)
+        cart.clear()
+        messages.success(request, "All items removed from shopping cart.")
+        return JsonResponse({})     # you can return whatever you like
+    return JsonResponse({'error': 'Invalid request'}, status=400)
