@@ -3,10 +3,12 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.models import User
 from .forms import SignUpForm, UserProfileForm, ChangePasswordForm
-from django import forms
+# from django import forms
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import update_session_auth_hash
-from Products.models import Customer
+from Products.models import Profile
+import json
+from Cart.cart import Cart
 # Create your views here.
 
 def login_user(request):
@@ -20,6 +22,17 @@ def login_user(request):
             user = authenticate(request, username=username, password=password)
             if user is not None:
                 login(request, user)
+                # Clear any items added while anonymous
+                cart = Cart(request)
+                cart.clear()
+                # Load saved cart from profile
+                current_user = Profile.objects.get(user__id=request.user.id)
+                saved_cart = current_user.old_cart
+                if saved_cart:
+                    converted_cart = json.loads(saved_cart)
+                    cart = Cart(request)
+                    for key,value in converted_cart.items():
+                        cart.db_add(product=key, quantity=value)
                 messages.success(request, ("You Have Been Logged In!"))
                 return redirect('home')
             else:
@@ -48,39 +61,41 @@ def register_user(request):
     return render(request, 'account/register.html', {'form': form})
 @login_required
 def user_profile(request):
-    edit_mode = request.GET.get('edit') == 'true' # Check if 'edit' parameter is explicitly 'true'
+    # 1) decide if we’re in edit mode
+    edit_mode = request.GET.get('edit') == 'true'
 
+    # 2) handle form submission
     if request.method == 'POST':
         form = UserProfileForm(request.POST, instance=request.user)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Your profile has been updated successfully!')
+            messages.success(request, 'Profile updated successfully!')
             return redirect('user_profile')
         else:
             messages.error(request, 'Please correct the errors below.')
-            edit_mode = True 
-
+            edit_mode = True  # stay in edit mode on error
     else:
         form = UserProfileForm(instance=request.user)
+
+    # 3) pull out “current” fields for display
     current_full_name = f"{request.user.first_name} {request.user.last_name}".strip()
-    current_email = request.user.email
-    current_username = request.user.username
+    current_email     = request.user.email
+    current_username  = request.user.username
+
+    # 4) try/except for the one-to-one Profile
     try:
-        profile = request.user.customer
-        phone = profile.phone
-    except Customer.DoesNotExist:
+        profile = request.user.profile
+        phone   = profile.phone
+    except Profile.DoesNotExist:
         phone = None
 
+    # 5) build context exactly as before
     context = {
-        # …same as before…
-        'current_phone_number': phone,
-    }
-    context = {
-        'form': form,
-        'edit_mode': edit_mode,
-        'current_full_name': current_full_name,
-        'current_email': current_email,
-        'current_username': current_username,
+        'form':                 form,
+        'edit_mode':            edit_mode,
+        'current_full_name':    current_full_name,
+        'current_email':        current_email,
+        'current_username':     current_username,
         'current_phone_number': phone,
     }
     return render(request, 'account/user_profile.html', context)

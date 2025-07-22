@@ -122,7 +122,49 @@
                                <div> 
                                   <p class="text-sm font-medium text-gray-500">Phone Number</p>
                                   <p class="text-lg font-semibold text-gray-800">{% if current_phone_number %}{{ current_phone_number }}{% else %}N/A{% endif %}</p> 
-                                </div> 
+                                </div>
+                                {# ==== SHOW MORE TOGGLE START ==== #}
+                            <!-- Toggle button -->
+                            <div class="text-center mb-6">
+                            <button
+                                id="toggle-more-btn"
+                                class="bg-gray-200 text-gray-800 py-2 px-4 rounded-full font-medium hover:bg-gray-300 transition-colors duration-200"
+                            >
+                                Show More
+                            </button>
+                            </div>
+
+                            <!-- Hidden extra info -->
+                            <div
+                            id="extra-info"
+                            class="hidden grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 bg-gray-50 rounded-lg p-6 shadow-sm"
+                            >
+                            <div>
+                                <p class="text-sm font-medium text-gray-500">Address Line 1</p>
+                                <p class="text-lg font-semibold text-gray-800">{{ request.user.profile.address1|default:"N/A" }}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-500">Address Line 2</p>
+                                <p class="text-lg font-semibold text-gray-800">{{ request.user.profile.address2|default:"N/A" }}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-500">City</p>
+                                <p class="text-lg font-semibold text-gray-800">{{ request.user.profile.city|default:"N/A" }}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-500">State/Province</p>
+                                <p class="text-lg font-semibold text-gray-800">{{ request.user.profile.state|default:"N/A" }}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-500">ZIP/Postal Code</p>
+                                <p class="text-lg font-semibold text-gray-800">{{ request.user.profile.zipcode|default:"N/A" }}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-500">Country</p>
+                                <p class="text-lg font-semibold text-gray-800">{{ request.user.profile.country|default:"N/A" }}</p>
+                            </div>
+                            </div>
+                            {# ==== SHOW MORE TOGGLE END ==== #}
                         </div>
 
                         <div class="flex items-center space-x-4">
@@ -169,6 +211,18 @@
             </div>
         </main>
     </div>
+    <script>
+  document.addEventListener('DOMContentLoaded', function(){
+    const btn  = document.getElementById('toggle-more-btn');
+    const info = document.getElementById('extra-info');
+
+    btn.addEventListener('click', function(){
+      const isHidden = info.classList.toggle('hidden');
+      btn.textContent = isHidden ? 'Show More' : 'Show Less';
+    });
+  });
+</script>
+
 </body>
 {% endblock %}
 </html>
