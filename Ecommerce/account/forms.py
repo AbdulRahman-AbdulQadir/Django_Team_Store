@@ -55,9 +55,7 @@ class UserProfileForm(UserChangeForm):
     )
 
     # -- Profile fields (new) --
-    phone    = forms.CharField(max_length=20, required=False,
-                    widget=forms.TextInput(attrs={'class': TAILWIND_INPUT_CLASSES}),
-                    label='Phone Number')
+    phone = forms.CharField(max_length=20, required=False,widget=forms.TextInput(attrs={'class': TAILWIND_INPUT_CLASSES}),label='Phone Number')
     address1 = forms.CharField(max_length=200, required=False,
                     widget=forms.TextInput(attrs={'class': TAILWIND_INPUT_CLASSES}),
                     label='Address Line 1')

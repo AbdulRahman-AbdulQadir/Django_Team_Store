@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
-import uuid
+# import uuid
 
 class Category(models.Model):
     name = models.CharField(max_length=255, unique=True)
@@ -69,35 +69,35 @@ class Customer(models.Model):
     def __str__(self):
         return f"{self.user.username}"
 
-class Order(models.Model):
-    STATUS_CHOICES = [
-        ('pending', 'Pending'),
-        ('processing', 'Processing'),
-        ('shipped', 'Shipped'),
-        ('delivered', 'Delivered'),
-        ('cancelled', 'Cancelled'),
-    ]
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True)
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
-    items = models.JSONField(
-        help_text='[{"product_id": ..., "quantity": ..., "price": ...}, ...]',
-        default=list,
-        blank=True
-    )
-    total_price = models.DecimalField(max_digits=12, decimal_places=2, blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+# class Order(models.Model):
+#     STATUS_CHOICES = [
+#         ('pending', 'Pending'),
+#         ('processing', 'Processing'),
+#         ('shipped', 'Shipped'),
+#         ('delivered', 'Delivered'),
+#         ('cancelled', 'Cancelled'),
+#     ]
+#     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+#     customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True)
+#     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+#     items = models.JSONField(
+#         help_text='[{"product_id": ..., "quantity": ..., "price": ...}, ...]',
+#         default=list,
+#         blank=True
+#     )
+#     total_price = models.DecimalField(max_digits=12, decimal_places=2, blank=True, null=True)
+#     created_at = models.DateTimeField(auto_now_add=True)
+#     updated_at = models.DateTimeField(auto_now=True)
 
-    def save(self, *args, **kwargs):
-        total = 0
-        for item in self.items or []:
-            total += item.get('quantity', 0) * item.get('price', 0)
-        self.total_price = total
-        super().save(*args, **kwargs)
+#     def save(self, *args, **kwargs):
+#         total = 0
+#         for item in self.items or []:
+#             total += item.get('quantity', 0) * item.get('price', 0)
+#         self.total_price = total
+#         super().save(*args, **kwargs)
 
-    def __str__(self):
-        return f"Order {self.id} - {self.status} (Total: {self.total_price})"
+#     def __str__(self):
+#         return f"Order {self.id} - {self.status} (Total: {self.total_price})"
 
 class Cart(models.Model):
     customer = models.OneToOneField(Customer, on_delete=models.CASCADE)

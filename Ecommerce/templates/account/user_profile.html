@@ -59,7 +59,6 @@
 
                 <section class="w-full lg:w-3/4 bg-white rounded-xl shadow-md p-6 md:p-8">
                     <h2 class="text-3xl font-bold text-gray-800 mb-6">Account Details</h2>
-
                     {% if messages %}
                         <ul class="messages">
                             {% for message in messages %}
@@ -78,7 +77,13 @@
                             {% for field in form %}
                                 <div class="mb-4">
                                     <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
-                                        {{ field.label }}
+                                        {% if field.label == 'Phone Number' %}
+                                            <strong>Billing Information</strong>
+                                            <br><br>   
+                                            {{ field.label }}
+                                        {% else %}
+                                            {{ field.label }}
+                                        {% endif %}
                                     </label>
                                     {{ field }}
                                     {% if field.help_text %}
@@ -93,7 +98,31 @@
                                     {% endif %}
                                 </div>
                             {% endfor %}
-
+                            <!-- For shipping form -->
+                                {% for field in shipping_form %}
+                                <div class="mb-4">
+                                    <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                                        {% if field.label == 'Full Name' %}
+                                            <strong>Shipping Information</strong>
+                                            <br><br>   
+                                            {{ field.label }}
+                                        {% else %}
+                                            {{ field.label }}
+                                        {% endif %}
+                                    </label>
+                                    {{ field }}
+                                    {% if field.help_text %}
+                                        <p class="text-xs text-gray-500 mt-1">{{ field.help_text }}</p>
+                                    {% endif %}
+                                    {% if field.errors %}
+                                        <ul class="errorlist">
+                                            {% for error in field.errors %}
+                                                <li>{{ error }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
                             <button type="submit" class="bg-indigo-600 text-white py-3 px-6 rounded-full text-lg font-semibold hover:bg-indigo-700 transition-colors duration-200 shadow-md transform hover:scale-105">
                                 Save Changes
                             </button>
@@ -139,6 +168,8 @@
                             id="extra-info"
                             class="hidden grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 bg-gray-50 rounded-lg p-6 shadow-sm"
                             >
+                            <strong>Billing Information</strong>
+                            <br> 
                             <div>
                                 <p class="text-sm font-medium text-gray-500">Address Line 1</p>
                                 <p class="text-lg font-semibold text-gray-800">{{ request.user.profile.address1|default:"N/A" }}</p>
@@ -162,6 +193,63 @@
                             <div>
                                 <p class="text-sm font-medium text-gray-500">Country</p>
                                 <p class="text-lg font-semibold text-gray-800">{{ request.user.profile.country|default:"N/A" }}</p>
+                            </div>
+                            </div>
+                            
+                            {# ==== SHOW MORE TOGGLE END ==== #}
+                            <!-- Hidden extra 2 info -->
+                             {# ==== SHOW MORE TOGGLE START ==== #}
+                            <!-- Show More button -->
+                            <div class="text-center mb-6">
+                            <button
+                                id="show-details-btn"
+                                class="bg-gray-200 text-gray-800 py-2 px-4 rounded-full font-medium hover:bg-gray-300 transition-colors duration-200"
+                            >
+                                Show More
+                            </button>
+                            </div>
+
+                            <!-- Extra info, hidden by default -->
+                            <div
+                            id="details-container"
+                            class="hidden grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 bg-gray-50 rounded-lg p-6 shadow-sm"
+                            >   <strong>Shipping Information</strong>
+                                <br> 
+                            <div>
+                                <p class="text-sm font-medium text-gray-500">Address Line 1</p>
+                                <p class="text-lg font-semibold text-gray-800">
+                                {{ shipping_user.shipping_address1|default:"N/A" }}
+                                </p>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-500">Address Line 2</p>
+                                <p class="text-lg font-semibold text-gray-800">
+                                {{ shipping_user.shipping_address2|default:"N/A" }}
+                                </p>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-500">City</p>
+                                <p class="text-lg font-semibold text-gray-800">
+                                {{ shipping_user.shipping_city|default:"N/A" }}
+                                </p>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-500">State/Province</p>
+                                <p class="text-lg font-semibold text-gray-800">
+                                {{ shipping_user.shipping_state|default:"N/A" }}
+                                </p>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-500">ZIP/Postal Code</p>
+                                <p class="text-lg font-semibold text-gray-800">
+                                {{ shipping_user.shipping_zipcode|default:"N/A" }}
+                                </p>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-500">Country</p>
+                                <p class="text-lg font-semibold text-gray-800">
+                                {{ shipping_user.shipping_country|default:"N/A" }}
+                                </p>
                             </div>
                             </div>
                             {# ==== SHOW MORE TOGGLE END ==== #}
@@ -220,6 +308,21 @@
       const isHidden = info.classList.toggle('hidden');
       btn.textContent = isHidden ? 'Show More' : 'Show Less';
     });
+  });
+  // Grab references
+  const showDetailsBtn = document.getElementById('show-details-btn');
+  const detailsContainer = document.getElementById('details-container');
+
+  // Toggle show/hide
+  showDetailsBtn.addEventListener('click', () => {
+    const isHidden = detailsContainer.classList.contains('hidden');
+    if (isHidden) {
+      detailsContainer.classList.remove('hidden');
+      showDetailsBtn.textContent = 'Show Less';
+    } else {
+      detailsContainer.classList.add('hidden');
+      showDetailsBtn.textContent = 'Show More';
+    }
   });
 </script>
 

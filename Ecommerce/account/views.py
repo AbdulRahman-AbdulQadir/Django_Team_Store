@@ -3,7 +3,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.models import User
 from .forms import SignUpForm, UserProfileForm, ChangePasswordForm
-# from django import forms
+from Payment.forms import ShippingForm
+from Payment.models import ShippingAddress
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import update_session_auth_hash
 from Products.models import Profile
@@ -65,10 +66,16 @@ def user_profile(request):
     edit_mode = request.GET.get('edit') == 'true'
 
     # 2) handle form submission
+    try:
+        shipping_user = ShippingAddress.objects.get(id=request.user.id)
+    except ShippingAddress.DoesNotExist:
+        shipping_user = ShippingAddress.objects.create(id=request.user.id,user=request.user,)
     if request.method == 'POST':
         form = UserProfileForm(request.POST, instance=request.user)
-        if form.is_valid():
+        shipping_form = ShippingForm(request.POST or None, instance=shipping_user)
+        if form.is_valid() or shipping_form.is_valid():
             form.save()
+            shipping_form.save()
             messages.success(request, 'Profile updated successfully!')
             return redirect('user_profile')
         else:
@@ -76,6 +83,8 @@ def user_profile(request):
             edit_mode = True  # stay in edit mode on error
     else:
         form = UserProfileForm(instance=request.user)
+        shipping_user, _ = ShippingAddress.objects.get_or_create(user=request.user)
+        shipping_form = ShippingForm(instance=shipping_user)
 
     # 3) pull out “current” fields for display
     current_full_name = f"{request.user.first_name} {request.user.last_name}".strip()
@@ -91,12 +100,14 @@ def user_profile(request):
 
     # 5) build context exactly as before
     context = {
-        'form':                 form,
-        'edit_mode':            edit_mode,
-        'current_full_name':    current_full_name,
-        'current_email':        current_email,
-        'current_username':     current_username,
+        'form': form,
+        'shipping_form': shipping_form,
+        'edit_mode': edit_mode,
+        'current_full_name': current_full_name,
+        'current_email': current_email,
+        'current_username': current_username,
         'current_phone_number': phone,
+        'shipping_user': shipping_user,
     }
     return render(request, 'account/user_profile.html', context)
 def update_password(request):
