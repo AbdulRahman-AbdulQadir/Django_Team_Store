@@ -33,6 +33,7 @@ class Order(models.Model):
     shipping_address = models.TextField(max_length=15000)
     amount_paid = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     date_ordered = models.DateTimeField(auto_now_add=True)
+    shipped = models.BooleanField(default=False)
     
     # id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     # status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
@@ -51,7 +52,7 @@ class Order(models.Model):
     #     super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"Order {self.id} - {str(self.id)}"
+        return f"Order - {str(self.id)}"
 
 class OrderItems(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True)
