@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,111 +15,17 @@
         setTimeout(() => el.remove(), 300);
     }
   </script>
-  
-
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
     rel="stylesheet"
   >
-
-  <style>
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: #f8fafc; /* Light Slate 50 */
-    .message {
-    position: relative;
-    padding: 1rem 1.5rem;
-    margin-bottom: 1rem;
-    border: 1px solid #f9c851;
-    background-color: #fff8e1;
-    color: #856404;
-    border-radius: 0.25rem;
-    font-family: sans-serif;
-    width: 50%; /* Set width to half */
-  }
-
-    .message .close-btn {
-        position: absolute;
-        top: 0.5rem;
-        right: 0.75rem;
-        background: transparent;
-        border: none;
-        font-size: 1.2rem;
-        line-height: 1;
-        cursor: pointer;
-        color: inherit;
-    }
-
-    .message.fade-out {
-        opacity: 0;
-        transition: opacity 0.3s ease;
-    }
-        }
-  </style>
-
+  <link rel="stylesheet" href="{% static 'css/base.css' %}">
   {% block extra_head %}{% endblock %}
   <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 </head>
 <body class="antialiased">
     <div class="min-h-screen flex flex-col">
-        <header class="bg-white shadow-sm p-4 md:p-6 flex items-center justify-between">
-            <div class="text-2xl font-bold text-gray-800 rounded-md">Store Here</div>
-            <nav class="hidden md:flex space-x-6">
-                <a href="{% url 'home' %}" class="text-gray-600 hover:text-indigo-600 transition-colors duration-200 rounded-md">Home</a>
-                <a href="{% url 'product_listing_page' %}" class="text-gray-600 hover:text-indigo-600 transition-colors duration-200 rounded-md">Shop&category</a>
-                <!-- <a href="#" class="text-gray-600 hover:text-indigo-600 transition-colors duration-200 rounded-md">Categories</a> -->
-                <a href="{% url 'about' %}" class="text-gray-600 hover:text-indigo-600 transition-colors duration-200 rounded-md">About Us</a>
-                {% if user.is_authenticated %}
-                <a href="{% url 'user_profile' %}" class="text-gray-600 hover:text-indigo-600 transition-colors duration-200 rounded-md">Profile</a>
-                <a href="{% url 'logout' %}" class="text-gray-600 hover:text-indigo-600 transition-colors duration-200 rounded-md">Logout</a>
-                {% else %}
-                <a href="{% url 'login' %}" class="text-gray-600 hover:text-indigo-600 transition-colors duration-200 rounded-md">Login</a>
-                <a href="{% url 'register' %}" class="text-gray-600 hover:text-indigo-600 transition-colors duration-200 rounded-md">Register</a>
-                {% endif %}
-                <a href="{% url 'contact_us' %}" class="text-gray-600 hover:text-indigo-600 transition-colors duration-200 rounded-md">Contact</a>
-            </nav>
-            <div class="flex items-center space-x-4">
-                <div class="relative hidden md:block">
-                    {% if request.resolver_match.url_name == 'home' %}
-                        <form method="get" action="{% url 'home' %}" class="relative">
-                    {% else %}
-                        <form method="get" action="{% url 'product_listing_page' %}" class="relative">
-                    {% endif %}
-                    <input
-                        type="text"
-                        name="q"
-                        placeholder="Search products..."
-                        value="{{ request.GET.q|default:'' }}"
-                        class="pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 w-64"
-                    >
-                    </form>
-                    <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                </div>
-                <a href="{% url 'cart_summary' %}" class="inline-flex items-center p-2 pr-8 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors duration-200 relative" aria-label="View cart">
-    <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-        xmlns="http://www.w3.org/2000/svg">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0
-                100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z">
-        </path>
-    </svg>
-    <span class="ml-2 text-gray-700">Cart</span>
-    <span id="cart_quantity" class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full transform translate-x-1/2">
-        {{ cart|length }}
-    </span>
-</a>
-                <button class="md:hidden p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors duration-200" aria-label="Toggle menu">
-                <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M4 6h16M4 12h16M4 18h16">
-                    </path>
-                </svg>
-                </button>
-
-            </div>
-            
-        </header>
+        {% include 'partials/header.html' %}
         {% if messages %}
             {% for message in messages %}
                 <div class="message" id="msg-{{ forloop.counter }}">
@@ -129,36 +36,9 @@
                 </div>
             {% endfor %}
         {% endif %}
+  
   {% block content %}{% endblock %}
-          <footer class="bg-gray-800 text-white p-8 mt-12 rounded-t-xl">
-            <div class="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div>
-                    <h3 class="text-xl font-bold mb-4">BrandLogo</h3>
-                    <p class="text-gray-400">Your one-stop shop for everything you need.</p>
-                </div>
-                <div>
-                    <h3 class="text-xl font-bold mb-4">Quick Links</h3>
-                    <ul class="space-y-2">
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-200 rounded-md">Shop All</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-200 rounded-md">New Arrivals</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-200 rounded-md">Sale</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-200 rounded-md">FAQ</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h3 class="text-xl font-bold mb-4">Contact Us</h3>
-                    <p class="text-gray-400">Email: info@brandlogo.com</p>
-                    <p class="text-gray-400">Phone: +1 (123) 456-7890</p>
-                    <div class="flex space-x-4 mt-4">
-                        <a href="#" class="text-gray-400 hover:text-white"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33V22C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd"></path></svg></a>
-                        <a href="#" class="text-gray-400 hover:text-white"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12.315 2.417a.75.75 0 01.07.867 6.75 6.75 0 00-3.08 4.316.75.75 0 11-1.331-.766 8.25 8.25 0 013.65 6.138v5.565a.75.75 0 01-1.5 0v-5.565a.75.75 0 01-1.5 0v.75a.75.75 0 01-1.5 0V8.25a.75.75 0 011.5 0v.75a.75.75 0 011.5 0V6.75a.75.75 0 011.5 0v1.5a.75.75 0 011.5 0V3.37a.75.75 0 01.86-.07z" clip-rule="evenodd"></path></svg></a>
-                        <a href="#" class="text-gray-400 hover:text-white"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33V22C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd"></path></svg></a>
-                    </div>
-                </div>
-            </div>
-            <div class="text-center text-gray-500 mt-8 pt-8 border-t border-gray-700">
-                &copy; 2025 BrandLogo. All rights reserved.
-            </div>
-        </footer>
+
+  {% include 'partials/footer.html' %}
 </body>
 </html>

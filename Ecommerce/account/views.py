@@ -108,6 +108,7 @@ def user_profile(request):
         'current_username': current_username,
         'current_phone_number': phone,
         'shipping_user': shipping_user,
+        'show_aside': True,
     }
     return render(request, 'account/user_profile.html', context)
 def update_password(request):

@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block title %} User Dashboard{% endblock %}
+
+{% block content %}
+<body class="antialiased flex flex-col min-h-screen">
+    <!-- Main Content -->
+    <main class="flex-grow container mx-auto px-4 py-8">
+        <h1 class="text-4xl font-extrabold text-gray-800 mb-2">Welcome, User!</h1>
+        <p class="text-gray-600 text-lg mb-8">Manage your account, view your orders, and more.</p>
+
+        <div class="flex flex-col lg:flex-row gap-8">
+            <!-- Profile Summary & Navigation Sidebar -->
+            {% if show_aside %}
+                {% include 'partials/sidebar.html' %}
+            {% endif %}
+            <!-- Order Details Section -->
+            <section class="w-full lg:w-3/4">
+                <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-2xl font-bold text-gray-800">Your Recent Orders</h2>
+                        <a href="#" class="text-sm font-medium text-indigo-600 hover:text-indigo-500 rounded-md">View All</a>
+                    </div>
+                    
+                    <!-- Tabs for Order Status -->
+                    <div class="flex border-b border-gray-200 mb-4">
+                        <button class="py-2 px-4 text-sm font-medium text-indigo-600 border-b-2 border-indigo-600">All Orders</button>
+                        <button class="py-2 px-4 text-sm font-medium text-gray-500 hover:text-gray-700">Shipped</button>
+                        <button class="py-2 px-4 text-sm font-medium text-gray-500 hover:text-gray-700">Pending</button>
+                        <button class="py-2 px-4 text-sm font-medium text-gray-500 hover:text-gray-700">Canceled</button>
+                    </div>
+
+                    <!-- Order Card 1 (Shipped) -->
+                    <div class="bg-gray-50 rounded-lg p-4 mb-4 flex flex-col md:flex-row items-start md:items-center justify-between shadow-sm">
+                        <div class="flex items-start mb-4 md:mb-0">
+                            <img src="https://placehold.co/80x80/E0F2F7/27272A?text=Product+A" alt="Product" class="w-20 h-20 object-cover rounded-lg mr-4">
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-800">Order #472839201</h3>
+                                <p class="text-gray-500 text-sm">Placed on October 26, 2025</p>
+                                <span class="inline-block mt-2 text-xs font-medium text-white bg-green-500 px-2 py-1 rounded-full">Shipped</span>
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-start md:items-end">
+                            <p class="text-xl font-bold text-gray-800">$129.99</p>
+                            <a href="#" class="mt-2 text-indigo-600 font-medium hover:underline text-sm rounded-md">View Details</a>
+                        </div>
+                    </div>
+
+                    <!-- Order Card 2 (Pending) -->
+                    <div class="bg-gray-50 rounded-lg p-4 mb-4 flex flex-col md:flex-row items-start md:items-center justify-between shadow-sm">
+                        <div class="flex items-start mb-4 md:mb-0">
+                            <img src="https://placehold.co/80x80/FCE7F3/27272A?text=Product+B" alt="Product" class="w-20 h-20 object-cover rounded-lg mr-4">
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-800">Order #472839202</h3>
+                                <p class="text-gray-500 text-sm">Placed on October 25, 2025</p>
+                                <span class="inline-block mt-2 text-xs font-medium text-white bg-yellow-500 px-2 py-1 rounded-full">Pending</span>
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-start md:items-end">
+                            <p class="text-xl font-bold text-gray-800">$89.00</p>
+                            <a href="#" class="mt-2 text-indigo-600 font-medium hover:underline text-sm rounded-md">View Details</a>
+                        </div>
+                    </div>
+
+                    <!-- Order Card 3 (Shipped) -->
+                    <div class="bg-gray-50 rounded-lg p-4 flex flex-col md:flex-row items-start md:items-center justify-between shadow-sm">
+                        <div class="flex items-start mb-4 md:mb-0">
+                            <img src="https://placehold.co/80x80/D1FAE5/27272A?text=Product+C" alt="Product" class="w-20 h-20 object-cover rounded-lg mr-4">
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-800">Order #472839203</h3>
+                                <p class="text-gray-500 text-sm">Placed on October 20, 2025</p>
+                                <span class="inline-block mt-2 text-xs font-medium text-white bg-green-500 px-2 py-1 rounded-full">Shipped</span>
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-start md:items-end">
+                            <p class="text-xl font-bold text-gray-800">$75.50</p>
+                            <a href="#" class="mt-2 text-indigo-600 font-medium hover:underline text-sm rounded-md">View Details</a>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+        </div>
+    </main>
+</body>
+{% endblock %}
+</html>

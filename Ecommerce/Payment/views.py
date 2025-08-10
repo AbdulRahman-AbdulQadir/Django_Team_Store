@@ -7,6 +7,11 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from Products.models import Product
 
+
+def dashboard(request):
+    
+    return render(request, 'payment/dashboard.html', {'show_aside': True})
+
 def billing_info(request):
     if request.POST:
         cart = Cart(request)

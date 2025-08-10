@@ -4,76 +4,86 @@
 {% block title %} About Us Page {% endblock %}
 {% block content %}
 <body class="antialiased">
-        <main class="flex-grow container mx-auto px-4 py-8">
-            <h1 class="text-4xl font-extrabold text-gray-800 mb-8 text-center">About Our Brand</h1>
-
-            <section class="bg-white rounded-xl shadow-md p-6 md:p-8 mb-12">
-                <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Our Mission</h2>
-                <p class="text-gray-700 text-lg leading-relaxed text-center max-w-3xl mx-auto">
-                    At **BrandLogo**, our mission is to provide a seamless and enjoyable online shopping experience, offering a curated selection of high-quality products that enrich the lives of our customers. We are committed to exceptional customer service, innovative technology, and sustainable practices.
-                </p>
-            </section>
-
-            <section class="flex flex-col md:flex-row items-center gap-8 mb-12">
-                <div class="w-full md:w-1/2">
-                    <h2 class="text-3xl font-bold text-gray-800 mb-4">Our Story</h2>
-                    <p class="text-gray-700 leading-relaxed mb-4">
-                        Founded in 20XX, **BrandLogo** started with a simple vision: to create an online destination where quality meets convenience. What began as a small passion project quickly grew into a thriving e-commerce platform, driven by our dedication to sourcing unique and reliable products from around the globe.
+    <main class="flex-grow container mx-auto px-4 py-8">
+        <h1 class="text-4xl font-extrabold text-gray-800 mb-8 text-center">About Our Brand</h1>
+        
+        <!-- New flex container for the sidebar and main content -->
+        <div class="flex flex-col lg:flex-row gap-8">
+            <!-- Sidebar remains the same, but now it's inside a flex container -->
+            {% if show_aside %}
+                {% include 'partials/sidebar.html' %}
+            {% endif %}
+            <!-- Main content section takes up the remaining space -->
+            <div class="w-full lg:w-3/4">
+                <section class="bg-white rounded-xl shadow-md p-6 md:p-8 mb-8">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Our Mission</h2>
+                    <p class="text-gray-700 text-lg leading-relaxed text-center max-w-3xl mx-auto">
+                        At **BrandLogo**, our mission is to provide a seamless and enjoyable online shopping experience, offering a curated selection of high-quality products that enrich the lives of our customers. We are committed to exceptional customer service, innovative technology, and sustainable practices.
                     </p>
-                    <p class="text-gray-700 leading-relaxed">
-                        Over the years, we've expanded our product categories, embraced cutting-edge technology to enhance user experience, and built a community of loyal customers. We believe in continuous improvement and are always listening to your feedback to make **BrandLogo** even better.
-                    </p>
-                </div>
-                <div class="w-full md:w-1/2">
-                    <img src="https://placehold.co/600x400/D1E7FF/27272A?text=Our+Story+Image" alt="Our Story" class="w-full h-auto rounded-xl shadow-lg">
-                </div>
-            </section>
+                </section>
 
-            <section class="bg-white rounded-xl shadow-md p-6 md:p-8 mb-12">
-                <h2 class="text-3xl font-bold text-gray-800 mb-8 text-center">Our Values</h2>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <div class="text-center">
-                        <svg class="w-16 h-16 mx-auto text-indigo-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.007 12.007 0 002.944 12c0 2.898 1.144 5.674 3.197 7.727a12.007 12.007 0 0017.032 0A12.007 12.007 0 0021.056 12c0-2.898-1.144-5.674-3.197-7.727z"></path></svg>
-                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Quality</h3>
-                        <p class="text-gray-600">We meticulously select products that meet our high standards for durability, functionality, and design.</p>
+                <section class="flex flex-col md:flex-row items-center gap-8 mb-8">
+                    <div class="w-full md:w-1/2">
+                        <h2 class="text-3xl font-bold text-gray-800 mb-4">Our Story</h2>
+                        <p class="text-gray-700 leading-relaxed mb-4">
+                            Founded in 20XX, **BrandLogo** started with a simple vision: to create an online destination where quality meets convenience. What began as a small passion project quickly grew into a thriving e-commerce platform, driven by our dedication to sourcing unique and reliable products from around the globe.
+                        </p>
+                        <p class="text-gray-700 leading-relaxed">
+                            Over the years, we've expanded our product categories, embraced cutting-edge technology to enhance user experience, and built a community of loyal customers. We believe in continuous improvement and are always listening to your feedback to make **BrandLogo** even better.
+                        </p>
                     </div>
-                    <div class="text-center">
-                    <!-- New “heart” SVG icon -->
-                    <svg class="w-16 h-16 mx-auto text-indigo-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                        d="M12 21s-8-6.693-8-11 3.582-6 8-6 8 3.357 8 6-8 11-8 11z" />
-                    </svg>
-                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Customer Focus</h3>
-                    <p class="text-gray-600">Your satisfaction is our priority. We strive to provide exceptional support and a seamless shopping journey.</p>
+                    <div class="w-full md:w-1/2">
+                        <img src="https://placehold.co/600x400/D1E7FF/27272A?text=Our+Story+Image" alt="Our Story" class="w-full h-auto rounded-xl shadow-lg">
                     </div>
+                </section>
 
-                    <div class="text-center">
-  <!-- New “rocket” SVG icon -->
-  <svg class="w-16 h-16 mx-auto text-indigo-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-    <path
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      stroke-width="1.5"
-      d="M12.552 2.11a1 1 0 00-1.104 0l-7 4.2A1 1 0 004 7.2v3.086a1 1 0 01-.293.707l-1.914 1.914a1 1 0 000 1.414l5.657 5.657a1 1 0 001.414 0l1.914-1.914a1 1 0 01.707-.293H16.8a1 1 0 00.894-.553l4.2-7a1 1 0 000-1.104l-4.2-7zM12 10a2 2 0 100 4 2 2 0 000-4z"
-    />
-  </svg>
-  <h3 class="text-xl font-semibold text-gray-800 mb-2">Innovation</h3>
-  <p class="text-gray-600">
-    We continuously explore new technologies and trends to enhance your online shopping experience.
-  </p>
+                <section class="bg-white rounded-xl shadow-md p-6 md:p-8 mb-8">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-8 text-center">Our Values</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div class="text-center">
+                            <svg class="w-16 h-16 mx-auto text-indigo-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.007 12.007 0 002.944 12c0 2.898 1.144 5.674 3.197 7.727a12.007 12.007 0 0017.032 0A12.007 12.007 0 0021.056 12c0-2.898-1.144-5.674-3.197-7.727z"></path></svg>
+                            <h3 class="text-xl font-semibold text-gray-800 mb-2">Quality</h3>
+                            <p class="text-gray-600">We meticulously select products that meet our high standards for durability, functionality, and design.</p>
+                        </div>
+                        <div class="text-center">
+                            <!-- New “heart” SVG icon -->
+                            <svg class="w-16 h-16 mx-auto text-indigo-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                      d="M12 21s-8-6.693-8-11 3.582-6 8-6 8 3.357 8 6-8 11-8 11z" />
+                            </svg>
+                            <h3 class="text-xl font-semibold text-gray-800 mb-2">Customer Focus</h3>
+                            <p class="text-gray-600">Your satisfaction is our priority. We strive to provide exceptional support and a seamless shopping journey.</p>
+                        </div>
+
+                        <div class="text-center">
+                            <!-- New “rocket” SVG icon -->
+                            <svg class="w-16 h-16 mx-auto text-indigo-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                      stroke-linecap="round"
+                                      stroke-linejoin="round"
+                                      stroke-width="1.5"
+                                      d="M12.552 2.11a1 1 0 00-1.104 0l-7 4.2A1 1 0 004 7.2v3.086a1 1 0 01-.293.707l-1.914 1.914a1 1 0 000 1.414l5.657 5.657a1 1 0 001.414 0l1.914-1.914a1 1 0 01.707-.293H16.8a1 1 0 00.894-.553l4.2-7a1 1 0 000-1.104l-4.2-7zM12 10a2 2 0 100 4 2 2 0 000-4z"
+                                      />
+                            </svg>
+                            <h3 class="text-xl font-semibold text-gray-800 mb-2">Innovation</h3>
+                            <p class="text-gray-600">
+                                We continuously explore new technologies and trends to enhance your online shopping experience.
+                            </p>
+                        </div>
+
+                    </div>
+                </section>
+
+                <section class="text-center">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-6">Ready to explore?</h2>
+                    <a href="#" class="inline-block bg-indigo-600 text-white py-3 px-8 rounded-full text-lg font-semibold hover:bg-indigo-700 transition-colors duration-200 shadow-md transform hover:scale-105">
+                        Shop Our Collection
+                    </a>
+                </section>
+            </div>
+        </div>
+    </main>
 </div>
-
-                </div>
-            </section>
-
-            <section class="text-center">
-                <h2 class="text-3xl font-bold text-gray-800 mb-6">Ready to explore?</h2>
-                <a href="#" class="inline-block bg-indigo-600 text-white py-3 px-8 rounded-full text-lg font-semibold hover:bg-indigo-700 transition-colors duration-200 shadow-md transform hover:scale-105">
-                    Shop Our Collection
-                </a>
-            </section>
-        </main>
-    </div>
 </body>
 {% endblock %}
 </html>

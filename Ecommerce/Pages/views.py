@@ -11,6 +11,6 @@ def home(request):
         products = Product.objects.order_by()[:8]
     return render(request, 'pages/home.html', {'products':products})
 def contact_us(request):
-    return render(request, 'pages/contact_us.html')
+    return render(request, 'pages/contact_us.html', {'show_aside': True})
 def about(request):
-    return render(request, 'pages/about.html')
+    return render(request, 'pages/about.html', {'show_aside': True})
