@@ -1,0 +1,32 @@
+body {
+      font-family: 'Inter', sans-serif;
+      background-color: #d2dde9; /* Light Slate 50 */
+    .message {
+    position: relative;
+    padding: 1rem 1.5rem;
+    margin-bottom: 1rem;
+    border: 1px solid #f9c851;
+    background-color: #fff8e1;
+    color: #856404;
+    border-radius: 0.25rem;
+    font-family: sans-serif;
+    width: 50%; /* Set width to half */
+  }
+
+    .message .close-btn {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.75rem;
+        background: transparent;
+        border: none;
+        font-size: 1.2rem;
+        line-height: 1;
+        cursor: pointer;
+        color: inherit;
+    }
+
+    .message.fade-out {
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+        }

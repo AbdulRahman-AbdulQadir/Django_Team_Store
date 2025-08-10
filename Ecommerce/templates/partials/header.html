@@ -1,0 +1,124 @@
+<header class="bg-white shadow-sm p-4 md:p-6 flex items-center justify-between">
+    <div class="text-2xl font-bold text-gray-800 rounded-md">Store Here</div>
+    <nav class="hidden md:flex space-x-2">
+        <a href="{% url 'home' %}" class="
+        {% if request.resolver_match.url_name == 'home' %}
+            inline-flex items-center justify-center px-4 py-2 text-base font-medium transition-colors duration-200
+            text-white bg-blue-500 border border-blue-500 rounded-full
+        {% else %}
+            inline-flex items-center justify-center px-4 py-2 text-base font-medium transition-colors duration-200
+            text-gray-600 hover:text-indigo-600 border border-transparent rounded-md
+        {% endif %}">Home</a>
+        <a href="{% url 'product_listing_page' %}" class="
+        {% if request.resolver_match.url_name == 'product_listing_page' %}
+            inline-flex items-center justify-center px-4 py-2 text-base font-medium transition-colors duration-200
+            text-white bg-blue-500 border border-blue-500 rounded-full
+        {% else %}
+            inline-flex items-center justify-center px-4 py-2 text-base font-medium transition-colors duration-200
+            text-gray-600 hover:text-indigo-600 border border-transparent rounded-md
+        {% endif %}">Shop&Category</a>
+        <a href="{% url 'about' %}" class="
+        {% if request.resolver_match.url_name == 'about' %}
+            inline-flex items-center justify-center px-4 py-2 text-base font-medium transition-colors duration-200
+            text-white bg-blue-500 border border-blue-500 rounded-full
+        {% else %}
+            inline-flex items-center justify-center px-4 py-2 text-base font-medium transition-colors duration-200
+            text-gray-600 hover:text-indigo-600 border border-transparent rounded-md
+        {% endif %}">About Us</a>
+        {% if user.is_authenticated %}
+        <a href="{% url 'user_profile' %}" class="
+        {% if request.resolver_match.url_name == 'user_profile' %}
+            inline-flex items-center justify-center px-4 py-2 text-base font-medium transition-colors duration-200
+            text-white bg-blue-500 border border-blue-500 rounded-full
+        {% else %}
+            inline-flex items-center justify-center px-4 py-2 text-base font-medium transition-colors duration-200
+            text-gray-600 hover:text-indigo-600 border border-transparent rounded-md
+        {% endif %}">Profile</a>
+        <a href="{% url 'logout' %}" class="
+        {% if request.resolver_match.url_name == 'logout' %}
+            inline-flex items-center justify-center px-4 py-2 text-base font-medium transition-colors duration-200
+            text-white bg-blue-500 border border-blue-500 rounded-full
+        {% else %}
+            inline-flex items-center justify-center px-4 py-2 text-base font-medium transition-colors duration-200
+            text-gray-600 hover:text-indigo-600 border border-transparent rounded-md
+        {% endif %}">Logout</a>
+        {% else %}
+        <a href="{% url 'login' %}" class="
+        {% if request.resolver_match.url_name == 'login' %}
+            inline-flex items-center justify-center px-4 py-2 text-base font-medium transition-colors duration-200
+            text-white bg-blue-500 border border-blue-500 rounded-full
+        {% else %}
+            inline-flex items-center justify-center px-4 py-2 text-base font-medium transition-colors duration-200
+            text-gray-600 hover:text-indigo-600 border border-transparent rounded-md
+        {% endif %}">Login</a>
+        <a href="{% url 'register' %}" class="
+        {% if request.resolver_match.url_name == 'register' %}
+            inline-flex items-center justify-center px-4 py-2 text-base font-medium transition-colors duration-200
+            text-white bg-blue-500 border border-blue-500 rounded-full
+        {% else %}
+            inline-flex items-center justify-center px-4 py-2 text-base font-medium transition-colors duration-200
+            text-gray-600 hover:text-indigo-600 border border-transparent rounded-md
+        {% endif %}">Register</a>
+        {% endif %}
+        <a href="{% url 'contact_us' %}" class="
+        {% if request.resolver_match.url_name == 'contact_us' %}
+            inline-flex items-center justify-center px-4 py-2 text-base font-medium transition-colors duration-200
+            text-white bg-blue-500 border border-blue-500 rounded-full
+        {% else %}
+            inline-flex items-center justify-center px-4 py-2 text-base font-medium transition-colors duration-200
+            text-gray-600 hover:text-indigo-600 border border-transparent rounded-md
+        {% endif %}">Contact</a>
+    </nav>
+    <div class="flex items-center space-x-4">
+        <div class="relative hidden md:block">
+            {% if request.resolver_match.url_name == 'home' %}
+                <form method="get" action="{% url 'home' %}" class="relative">
+            {% else %}
+                <form method="get" action="{% url 'product_listing_page' %}" class="relative">
+            {% endif %}
+            <input
+                type="text"
+                name="q"
+                placeholder="Search products..."
+                value="{{ request.GET.q|default:'' }}"
+                class="pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 w-64"
+            >
+            </form>
+            <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+        </div>
+                <a href="{% url 'cart_summary' %}" class="
+                {% if request.resolver_match.url_name == 'cart_summary' %}
+                    inline-flex items-center justify-center p-2 pr-8 text-base font-medium
+                    transition-colors duration-200
+                    text-white bg-blue-500 border border-blue-500 rounded-full
+                    relative /* Keep relative for the badge positioning */
+                {% else %}
+                    inline-flex items-center justify-center p-2 pr-8 text-base font-medium
+                    transition-colors duration-200
+                    bg-gray-100 hover:bg-gray-200 border border-transparent rounded-full
+                    relative /* Keep relative for the badge positioning */
+                {% endif %}" aria-label="View cart">
+    <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0
+                100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z">
+        </path>
+    </svg>
+    <span class="ml-2 text-gray-700">Cart</span>
+    <span id="cart_quantity" class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full transform translate-x-1/2">
+        {{ cart|length }}
+    </span>
+    </a>
+        <button class="md:hidden p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors duration-200" aria-label="Toggle menu">
+        <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M4 6h16M4 12h16M4 18h16">
+            </path>
+        </svg>
+        </button>
+
+    </div>
+            
+</header>
