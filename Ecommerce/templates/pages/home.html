@@ -1,98 +1,88 @@
 {% extends 'base.html' %}
-<!DOCTYPE html>
-<html lang="en">
 {% block title %} E-commerce Home Page {% endblock %}
 {% block content %}
-<body class="antialiased">
-    
-
-        <main class="flex-grow container mx-auto px-4 py-8">
-            <section class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-xl p-8 md:p-16 text-center mb-12 shadow-lg">
-                <h1 class="text-3xl md:text-5xl font-extrabold leading-tight mb-4">Discover Your Next Favorite Item</h1>
-                <p class="text-lg md:text-xl mb-8 opacity-90">Explore our curated collection of high-quality products.</p>
-                <a href="{% url 'product_listing_page' %}" class="bg-white text-indigo-700 font-bold py-3 px-8 rounded-full shadow-lg hover:bg-gray-100 transform hover:scale-105 transition-all duration-300">
-                    Shop Now 
+    <main class="flex-grow container mx-auto px-4 py-8">
+        <section class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-xl p-8 md:p-16 text-center mb-12 shadow-lg">
+            <h1 class="text-3xl md:text-5xl font-extrabold leading-tight mb-4">Discover Your Next Favorite Item</h1>
+            <p class="text-lg md:text-xl mb-8 opacity-90">Explore our curated collection of high-quality products.</p>
+            <a href="{% url 'product_listing_page' %}" class="bg-white text-indigo-700 font-bold py-3 px-8 rounded-full shadow-lg hover:bg-gray-100 transform hover:scale-105 transition-all duration-300">
+                Shop Now 
+            </a>
+        </section>
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Top Categories</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div class="bg-white rounded-xl shadow-md p-6 text-center hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300">
+                    <img src="https://placehold.co/100x100/A78BFA/ffffff?text=Electronics" alt="Electronics" class="mx-auto mb-4 rounded-full">
+                    <h3 class="text-lg font-semibold text-gray-700">Electronics</h3>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-6 text-center hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300">
+                    <img src="https://placehold.co/100x100/FDBA74/ffffff?text=Apparel" alt="Apparel" class="mx-auto mb-4 rounded-full">
+                    <h3 class="text-lg font-semibold text-gray-700">Apparel</h3>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-6 text-center hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300">
+                    <img src="https://placehold.co/100x100/6EE7B7/ffffff?text=HomeGoods" alt="Home Goods" class="mx-auto mb-4 rounded-full">
+                    <h3 class="text-lg font-semibold text-gray-700">Home Goods</h3>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-6 text-center hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300">
+                    <img src="https://placehold.co/100x100/94A3B8/ffffff?text=Books" alt="Books" class="mx-auto mb-4 rounded-full">
+                    <h3 class="text-lg font-semibold text-gray-700">Books</h3>
+                </div>
+            </div>
+        </section>
+        <section>
+            <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Featured Products</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">  
+                {% for product in products %}
+                {% if product.is_active == False %}
+                <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300">
+                <span
+                    class="absolute top-3 left-3 px-3 py-1 rounded-full text-purple-600 font-semibold" style="background-color: #d8c3a5;"> SOON </span>
+                    <img src="{{ product.image.url }}" alt="Product Name" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">{{ product.name }}</h3>
+                        <p class="text-gray-600 text-sm mb-4">{{ product.description }}</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-2xl font-bold text-indigo-600"><strike>${{ product.price }}</strike></span>
+                            <a href="{% url 'product_detail_page' product.id %}" class="inline-block bg-indigo-600 text-white py-2 px-4 rounded-full hover:bg-indigo-700 transition-colors duration-200">
+                                View Product 
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300">
+                    <img src="{{ product.image.url }}" alt="Product Name" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">{{ product.name }}</h3>
+                        <p class="text-gray-600 text-sm mb-4">{{ product.description }}</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-2xl font-bold text-indigo-600">${{ product.price }}</span>
+                            <a href="{% url 'product_detail_page' product.id %}" class="inline-block bg-indigo-600 text-white py-2 px-4 rounded-full hover:bg-indigo-700 transition-colors duration-200">
+                                View Product 
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                {% empty %}
+                    <p>No products found.</p>
+                {% endfor %}
+            </div>
+            <div class="show-more text-center mt-12 mb-8">
+                <a href="{% url 'product_listing_page' %}" 
+                    class="inline-flex items-center justify-center 
+                            bg-indigo-600 text-white font-bold 
+                            py-3 px-8 rounded-full shadow-lg 
+                            hover:bg-indigo-700 transform hover:scale-105 
+                            transition-all duration-300 ease-in-out 
+                            focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                    Show More Products 
+                    <svg class="ml-2 -mr-1 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                    </svg>
                 </a>
-            </section>
-
-            <section class="mb-12">
-                <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Top Categories</h2>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-                    <div class="bg-white rounded-xl shadow-md p-6 text-center hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300">
-                        <img src="https://placehold.co/100x100/A78BFA/ffffff?text=Electronics" alt="Electronics" class="mx-auto mb-4 rounded-full">
-                        <h3 class="text-lg font-semibold text-gray-700">Electronics</h3>
-                    </div>
-                    <div class="bg-white rounded-xl shadow-md p-6 text-center hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300">
-                        <img src="https://placehold.co/100x100/FDBA74/ffffff?text=Apparel" alt="Apparel" class="mx-auto mb-4 rounded-full">
-                        <h3 class="text-lg font-semibold text-gray-700">Apparel</h3>
-                    </div>
-                    <div class="bg-white rounded-xl shadow-md p-6 text-center hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300">
-                        <img src="https://placehold.co/100x100/6EE7B7/ffffff?text=HomeGoods" alt="Home Goods" class="mx-auto mb-4 rounded-full">
-                        <h3 class="text-lg font-semibold text-gray-700">Home Goods</h3>
-                    </div>
-                    <div class="bg-white rounded-xl shadow-md p-6 text-center hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300">
-                        <img src="https://placehold.co/100x100/94A3B8/ffffff?text=Books" alt="Books" class="mx-auto mb-4 rounded-full">
-                        <h3 class="text-lg font-semibold text-gray-700">Books</h3>
-                    </div>
-                </div>
-            </section>
-
-            <section>
-                <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Featured Products</h2>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">  
-                    {% for product in products %}
-                    {% if product.is_active == False %}
-                    <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300">
-                    <span
-                        class="absolute top-3 left-3 px-3 py-1 rounded-full text-purple-600 font-semibold" style="background-color: #d8c3a5;"> SOON </span>
-                        <img src="{{ product.image.url }}" alt="Product Name" class="w-full h-48 object-cover">
-                        <div class="p-6">
-                            <h3 class="text-xl font-semibold text-gray-800 mb-2">{{ product.name }}</h3>
-                            <p class="text-gray-600 text-sm mb-4">{{ product.description }}</p>
-                            <div class="flex items-center justify-between">
-                                <span class="text-2xl font-bold text-indigo-600"><strike>${{ product.price }}</strike></span>
-                                <a href="{% url 'product_detail_page' product.id %}" class="inline-block bg-indigo-600 text-white py-2 px-4 rounded-full hover:bg-indigo-700 transition-colors duration-200">
-                                    View Product 
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    {% else %}
-                    <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300">
-                        <img src="{{ product.image.url }}" alt="Product Name" class="w-full h-48 object-cover">
-                        <div class="p-6">
-                            <h3 class="text-xl font-semibold text-gray-800 mb-2">{{ product.name }}</h3>
-                            <p class="text-gray-600 text-sm mb-4">{{ product.description }}</p>
-                            <div class="flex items-center justify-between">
-                                <span class="text-2xl font-bold text-indigo-600">${{ product.price }}</span>
-                                <a href="{% url 'product_detail_page' product.id %}" class="inline-block bg-indigo-600 text-white py-2 px-4 rounded-full hover:bg-indigo-700 transition-colors duration-200">
-                                    View Product 
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    {% endif %}
-                    {% empty %}
-                        <p>No products found.</p>
-                    {% endfor %}
-                </div>
-                <div class="show-more text-center mt-12 mb-8">
-                    <a href="{% url 'product_listing_page' %}" 
-                       class="inline-flex items-center justify-center 
-                              bg-indigo-600 text-white font-bold 
-                              py-3 px-8 rounded-full shadow-lg 
-                              hover:bg-indigo-700 transform hover:scale-105 
-                              transition-all duration-300 ease-in-out 
-                              focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                        Show More Products 
-                        <svg class="ml-2 -mr-1 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-                        </svg>
-                    </a>
-                </div>
-            </section>
-        </main>
-    </div>
-</body>
+            </div>
+        </section>
+    </main>
 {% endblock %}
-</html>

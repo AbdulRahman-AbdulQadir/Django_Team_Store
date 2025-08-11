@@ -9,9 +9,11 @@ from Products.models import Product
 
 
 def dashboard(request):
-    
-    return render(request, 'payment/dashboard.html', {'show_aside': True})
-
+    if request.user.is_authenticated and request.user.is_superuser:
+        return render(request, 'payment/dashboard.html', {'show_aside': True})
+    else:
+        messages.success(request, 'Access Denied')
+        return redirect('home')
 def billing_info(request):
     if request.POST:
         cart = Cart(request)

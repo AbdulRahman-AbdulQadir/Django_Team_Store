@@ -6,15 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}Default Title{% endblock %}</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    function dismissMessage(id) {
-        const el = document.getElementById(id);
-        // fade out...
-        el.classList.add('fade-out');
-        // then remove from DOM
-        setTimeout(() => el.remove(), 300);
-    }
-  </script>
+  <script src="{% static 'javascript/messages.js' %}"></script>
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
     rel="stylesheet"
@@ -25,7 +17,9 @@
 </head>
 <body class="antialiased">
     <div class="min-h-screen flex flex-col">
+      <header class="bg-white shadow-sm p-4 md:p-6 flex items-center justify-between">
         {% include 'partials/header.html' %}
+      </header>
         {% if messages %}
             {% for message in messages %}
                 <div class="message" id="msg-{{ forloop.counter }}">
@@ -36,9 +30,10 @@
                 </div>
             {% endfor %}
         {% endif %}
-  
   {% block content %}{% endblock %}
-
-  {% include 'partials/footer.html' %}
+  <footer class="bg-gray-800 text-white p-8 mt-12 rounded-t-xl">
+    {% include 'partials/footer.html' %}
+  </footer>
+  <script src="{% static 'javascript/aside.js' %}"></script>
 </body>
 </html>

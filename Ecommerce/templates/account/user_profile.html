@@ -1,280 +1,255 @@
 {% extends 'base.html' %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Profile Page</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f8fafc; /* Light Slate 50 */
-        }
-        /* Optional: Add custom styling for error messages */
-        .errorlist {
-            color: #ef4444; /* red-500 */
-            font-size: 0.875rem; /* sm */
-            margin-top: 0.25rem;
-            list-style-type: none;
-            padding-left: 0;
-        }
-    </style>
-</head>
 {% block title %} User Profile Page {% endblock %}
 {% block content %}
-<body class="antialiased">
-        <main class="flex-grow container mx-auto px-4 py-8">
-            <h1 class="text-4xl font-extrabold text-gray-800 mb-8 text-center">My Profile</h1>
+<main class="flex-grow container mx-auto px-4 py-8">
+    <h1 class="text-4xl font-extrabold text-gray-800 mb-8 text-center">My Profile</h1>
 
-            <div class="flex flex-col lg:flex-row gap-8">
-            {% if show_aside %}
-                {% include 'partials/sidebar.html' %}
+    <div class="flex flex-col lg:flex-row gap-8">
+    {% if show_aside %}
+        {% include 'partials/sidebar.html' %}
+    {% endif %}
+        <section class="w-full lg:w-3/4 bg-white rounded-xl shadow-md p-6 md:p-8">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6">Account Details</h2>
+            {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                        <li{% if message.tags %} class="{{ message.tags }} text-center py-2 px-4 rounded-lg mb-4 {% if message.tags == 'success' %}bg-green-100 text-green-700{% elif message.tags == 'error' %}bg-red-100 text-red-700{% endif %}"{% endif %}>
+                            {{ message }}
+                        </li>
+                    {% endfor %}
+                </ul>
             {% endif %}
-                <section class="w-full lg:w-3/4 bg-white rounded-xl shadow-md p-6 md:p-8">
-                    <h2 class="text-3xl font-bold text-gray-800 mb-6">Account Details</h2>
-                    {% if messages %}
-                        <ul class="messages">
-                            {% for message in messages %}
-                                <li{% if message.tags %} class="{{ message.tags }} text-center py-2 px-4 rounded-lg mb-4 {% if message.tags == 'success' %}bg-green-100 text-green-700{% elif message.tags == 'error' %}bg-red-100 text-red-700{% endif %}"{% endif %}>
-                                    {{ message }}
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    {% endif %}
 
-                    {# Conditional rendering based on edit_mode #}
-                    {% if edit_mode %}
-                        <form method="post" class="space-y-6">
-                            {% csrf_token %}
-                            
-                            {% for field in form %}
-                                <div class="mb-4">
-                                    <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
-                                        {% if field.label == 'Phone Number' %}
-                                            <strong>Billing Information</strong>
-                                            <br><br>   
-                                            {{ field.label }}
-                                        {% else %}
-                                            {{ field.label }}
-                                        {% endif %}
-                                    </label>
-                                    {{ field }}
-                                    {% if field.help_text %}
-                                        <p class="text-xs text-gray-500 mt-1">{{ field.help_text }}</p>
-                                    {% endif %}
-                                    {% if field.errors %}
-                                        <ul class="errorlist">
-                                            {% for error in field.errors %}
-                                                <li>{{ error }}</li>
-                                            {% endfor %}
-                                        </ul>
-                                    {% endif %}
-                                </div>
-                            {% endfor %}
-                            <!-- For shipping form -->
-                                {% for field in shipping_form %}
-                                <div class="mb-4">
-                                    <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
-                                        {% if field.label == 'Full Name' %}
-                                            <strong>Shipping Information</strong>
-                                            <br><br>   
-                                            {{ field.label }}
-                                        {% else %}
-                                            {{ field.label }}
-                                        {% endif %}
-                                    </label>
-                                    {{ field }}
-                                    {% if field.help_text %}
-                                        <p class="text-xs text-gray-500 mt-1">{{ field.help_text }}</p>
-                                    {% endif %}
-                                    {% if field.errors %}
-                                        <ul class="errorlist">
-                                            {% for error in field.errors %}
-                                                <li>{{ error }}</li>
-                                            {% endfor %}
-                                        </ul>
-                                    {% endif %}
-                                </div>
-                                {% endfor %}
-                            <button type="submit" class="bg-indigo-600 text-white py-3 px-6 rounded-full text-lg font-semibold hover:bg-indigo-700 transition-colors duration-200 shadow-md transform hover:scale-105">
-                                Save Changes
-                            </button>
-                            <a href="{% url 'user_profile' %}" class="ml-4 bg-gray-300 text-gray-800 py-3 px-6 rounded-full text-lg font-semibold hover:bg-gray-400 transition-colors duration-200 shadow-md transform hover:scale-105">
-                                Cancel
-                            </a>
-                        </form>
-                    {% else %}
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                            <div>
-                                <p class="text-sm font-medium text-gray-500">Username</p>
-                                <p class="text-lg font-semibold text-gray-800">{{ current_username }}</p>
-                            </div>
-                            <div>
-                                <p class="text-sm font-medium text-gray-500">Full Name</p>
-                                <p class="text-lg font-semibold text-gray-800">{{ current_full_name }}</p>
-                            </div>
-                            <div>
-                                <p class="text-sm font-medium text-gray-500">Email Address</p>
-                                {% if  current_email %}
-                                    <p class="text-lg font-semibold text-gray-800">{{ current_email }}</p>
+            {# Conditional rendering based on edit_mode #}
+            {% if edit_mode %}
+                <form method="post" class="space-y-6">
+                    {% csrf_token %}
+                    
+                    {% for field in form %}
+                        <div class="mb-4">
+                            <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                                {% if field.label == 'Phone Number' %}
+                                    <strong>Billing Information</strong>
+                                    <br><br>   
+                                    {{ field.label }}
                                 {% else %}
-                                    <p class="text-lg font-semibold text-gray-800">N/A</p>
+                                    {{ field.label }}
                                 {% endif %}
-                            </div>
-                               <div> 
-                                  <p class="text-sm font-medium text-gray-500">Phone Number</p>
-                                  <p class="text-lg font-semibold text-gray-800">{% if current_phone_number %}{{ current_phone_number }}{% else %}N/A{% endif %}</p> 
-                                </div>
-                                {# ==== SHOW MORE TOGGLE START ==== #}
-                            <!-- Toggle button -->
-                            <div class="text-center mb-6">
-                            <button
-                                id="toggle-more-btn"
-                                class="bg-gray-200 text-gray-800 py-2 px-4 rounded-full font-medium hover:bg-gray-300 transition-colors duration-200"
-                            >
-                                Show More
-                            </button>
-                            </div>
-
-                            <!-- Hidden extra info -->
-                            <div
-                            id="extra-info"
-                            class="hidden grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 bg-gray-50 rounded-lg p-6 shadow-sm"
-                            >
-                            <strong>Billing Information</strong>
-                            <br> 
-                            <div>
-                                <p class="text-sm font-medium text-gray-500">Address Line 1</p>
-                                <p class="text-lg font-semibold text-gray-800">{{ request.user.profile.address1|default:"N/A" }}</p>
-                            </div>
-                            <div>
-                                <p class="text-sm font-medium text-gray-500">Address Line 2</p>
-                                <p class="text-lg font-semibold text-gray-800">{{ request.user.profile.address2|default:"N/A" }}</p>
-                            </div>
-                            <div>
-                                <p class="text-sm font-medium text-gray-500">City</p>
-                                <p class="text-lg font-semibold text-gray-800">{{ request.user.profile.city|default:"N/A" }}</p>
-                            </div>
-                            <div>
-                                <p class="text-sm font-medium text-gray-500">State/Province</p>
-                                <p class="text-lg font-semibold text-gray-800">{{ request.user.profile.state|default:"N/A" }}</p>
-                            </div>
-                            <div>
-                                <p class="text-sm font-medium text-gray-500">ZIP/Postal Code</p>
-                                <p class="text-lg font-semibold text-gray-800">{{ request.user.profile.zipcode|default:"N/A" }}</p>
-                            </div>
-                            <div>
-                                <p class="text-sm font-medium text-gray-500">Country</p>
-                                <p class="text-lg font-semibold text-gray-800">{{ request.user.profile.country|default:"N/A" }}</p>
-                            </div>
-                            </div>
-                            
-                            {# ==== SHOW MORE TOGGLE END ==== #}
-                            <!-- Hidden extra 2 info -->
-                             {# ==== SHOW MORE TOGGLE START ==== #}
-                            <!-- Show More button -->
-                            <div class="text-center mb-6">
-                            <button
-                                id="show-details-btn"
-                                class="bg-gray-200 text-gray-800 py-2 px-4 rounded-full font-medium hover:bg-gray-300 transition-colors duration-200"
-                            >
-                                Show More
-                            </button>
-                            </div>
-
-                            <!-- Extra info, hidden by default -->
-                            <div
-                            id="details-container"
-                            class="hidden grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 bg-gray-50 rounded-lg p-6 shadow-sm"
-                            >   <strong>Shipping Information</strong>
-                                <br> 
-                            <div>
-                                <p class="text-sm font-medium text-gray-500">Address Line 1</p>
-                                <p class="text-lg font-semibold text-gray-800">
-                                {{ shipping_user.shipping_address1|default:"N/A" }}
-                                </p>
-                            </div>
-                            <div>
-                                <p class="text-sm font-medium text-gray-500">Address Line 2</p>
-                                <p class="text-lg font-semibold text-gray-800">
-                                {{ shipping_user.shipping_address2|default:"N/A" }}
-                                </p>
-                            </div>
-                            <div>
-                                <p class="text-sm font-medium text-gray-500">City</p>
-                                <p class="text-lg font-semibold text-gray-800">
-                                {{ shipping_user.shipping_city|default:"N/A" }}
-                                </p>
-                            </div>
-                            <div>
-                                <p class="text-sm font-medium text-gray-500">State/Province</p>
-                                <p class="text-lg font-semibold text-gray-800">
-                                {{ shipping_user.shipping_state|default:"N/A" }}
-                                </p>
-                            </div>
-                            <div>
-                                <p class="text-sm font-medium text-gray-500">ZIP/Postal Code</p>
-                                <p class="text-lg font-semibold text-gray-800">
-                                {{ shipping_user.shipping_zipcode|default:"N/A" }}
-                                </p>
-                            </div>
-                            <div>
-                                <p class="text-sm font-medium text-gray-500">Country</p>
-                                <p class="text-lg font-semibold text-gray-800">
-                                {{ shipping_user.shipping_country|default:"N/A" }}
-                                </p>
-                            </div>
-                            </div>
-                            {# ==== SHOW MORE TOGGLE END ==== #}
+                            </label>
+                            {{ field }}
+                            {% if field.help_text %}
+                                <p class="text-xs text-gray-500 mt-1">{{ field.help_text }}</p>
+                            {% endif %}
+                            {% if field.errors %}
+                                <ul class="errorlist">
+                                    {% for error in field.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
                         </div>
-
-                        <div class="flex items-center space-x-4">
-  <a
-    href="{% url 'user_profile' %}?edit=true"
-    class="bg-indigo-600 text-white py-3 px-6 rounded-full text-lg font-semibold hover:bg-indigo-700 transition-colors duration-200 shadow-md transform hover:scale-105"
-  >
-    Edit Profile
-  </a>
-
-  <span class="text-gray-600 font-medium"><strong>OR</strong></span>
-
-  <a
-    href="{% url 'update_password' %}?edit=true"
-    class="bg-green-600 text-white py-3 px-6 rounded-full text-lg font-semibold hover:bg-green-700 transition-colors duration-200 shadow-md transform hover:scale-105"
-  >
-    Update Password
-  </a>
-</div>
-
-                    {% endif %}
-
-                    <h2 class="text-3xl font-bold text-gray-800 mt-12 mb-6">Recent Orders</h2>
-
-                    <div class="space-y-4">
-                        <div class="bg-gray-50 rounded-lg p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between shadow-sm">
-                            <div>
-                                <p class="font-semibold text-gray-800">Order #ORD12345</p>
-                                <p class="text-sm text-gray-600">Date: 2025-05-28</p>
-                                <p class="text-sm text-gray-600">Total: $129.99</p>
-                            </div>
-                            <a href="#" class="text-indigo-600 hover:text-indigo-800 font-medium mt-2 sm:mt-0 rounded-md">View Details</a>
+                    {% endfor %}
+                    <!-- For shipping form -->
+                        {% for field in shipping_form %}
+                        <div class="mb-4">
+                            <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                                {% if field.label == 'Full Name' %}
+                                    <strong>Shipping Information</strong>
+                                    <br><br>   
+                                    {{ field.label }}
+                                {% else %}
+                                    {{ field.label }}
+                                {% endif %}
+                            </label>
+                            {{ field }}
+                            {% if field.help_text %}
+                                <p class="text-xs text-gray-500 mt-1">{{ field.help_text }}</p>
+                            {% endif %}
+                            {% if field.errors %}
+                                <ul class="errorlist">
+                                    {% for error in field.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
                         </div>
-                        <div class="bg-gray-50 rounded-lg p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between shadow-sm">
-                            <div>
-                                <p class="font-semibold text-gray-800">Order #ORD12344</p>
-                                <p class="text-sm text-gray-600">Date: 2025-05-15</p>
-                                <p class="text-sm text-gray-600">Total: $274.50</p>
-                            </div>
-                            <a href="#" class="text-indigo-600 hover:text-indigo-800 font-medium mt-2 sm:mt-0 rounded-md">View Details</a>
-                        </div>
+                        {% endfor %}
+                    <button type="submit" class="bg-indigo-600 text-white py-3 px-6 rounded-full text-lg font-semibold hover:bg-indigo-700 transition-colors duration-200 shadow-md transform hover:scale-105">
+                        Save Changes
+                    </button>
+                    <a href="{% url 'user_profile' %}" class="ml-4 bg-gray-300 text-gray-800 py-3 px-6 rounded-full text-lg font-semibold hover:bg-gray-400 transition-colors duration-200 shadow-md transform hover:scale-105">
+                        Cancel
+                    </a>
+                </form>
+            {% else %}
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <div>
+                        <p class="text-sm font-medium text-gray-500">Username</p>
+                        <p class="text-lg font-semibold text-gray-800">{{ current_username }}</p>
                     </div>
-                </section>
+                    <div>
+                        <p class="text-sm font-medium text-gray-500">Full Name</p>
+                        <p class="text-lg font-semibold text-gray-800">{{ current_full_name }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-500">Email Address</p>
+                        {% if  current_email %}
+                            <p class="text-lg font-semibold text-gray-800">{{ current_email }}</p>
+                        {% else %}
+                            <p class="text-lg font-semibold text-gray-800">N/A</p>
+                        {% endif %}
+                    </div>
+                        <div> 
+                            <p class="text-sm font-medium text-gray-500">Phone Number</p>
+                            <p class="text-lg font-semibold text-gray-800">{% if current_phone_number %}{{ current_phone_number }}{% else %}N/A{% endif %}</p> 
+                        </div>
+                        {# ==== SHOW MORE TOGGLE START ==== #}
+                    <!-- Toggle button -->
+                    <div class="text-center mb-6">
+                    <button
+                        id="toggle-more-btn"
+                        class="bg-gray-200 text-gray-800 py-2 px-4 rounded-full font-medium hover:bg-gray-300 transition-colors duration-200"
+                    >
+                        Show More
+                    </button>
+                    </div>
+
+                    <!-- Hidden extra info -->
+                    <div
+                    id="extra-info"
+                    class="hidden grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 bg-gray-50 rounded-lg p-6 shadow-sm"
+                    >
+                    <strong>Billing Information</strong>
+                    <br> 
+                    <div>
+                        <p class="text-sm font-medium text-gray-500">Address Line 1</p>
+                        <p class="text-lg font-semibold text-gray-800">{{ request.user.profile.address1|default:"N/A" }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-500">Address Line 2</p>
+                        <p class="text-lg font-semibold text-gray-800">{{ request.user.profile.address2|default:"N/A" }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-500">City</p>
+                        <p class="text-lg font-semibold text-gray-800">{{ request.user.profile.city|default:"N/A" }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-500">State/Province</p>
+                        <p class="text-lg font-semibold text-gray-800">{{ request.user.profile.state|default:"N/A" }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-500">ZIP/Postal Code</p>
+                        <p class="text-lg font-semibold text-gray-800">{{ request.user.profile.zipcode|default:"N/A" }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-500">Country</p>
+                        <p class="text-lg font-semibold text-gray-800">{{ request.user.profile.country|default:"N/A" }}</p>
+                    </div>
+                    </div>
+                    
+                    {# ==== SHOW MORE TOGGLE END ==== #}
+                    <!-- Hidden extra 2 info -->
+                        {# ==== SHOW MORE TOGGLE START ==== #}
+                    <!-- Show More button -->
+                    <div class="text-center mb-6">
+                    <button
+                        id="show-details-btn"
+                        class="bg-gray-200 text-gray-800 py-2 px-4 rounded-full font-medium hover:bg-gray-300 transition-colors duration-200"
+                    >
+                        Show More
+                    </button>
+                    </div>
+
+                    <!-- Extra info, hidden by default -->
+                    <div
+                    id="details-container"
+                    class="hidden grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 bg-gray-50 rounded-lg p-6 shadow-sm"
+                    >   <strong>Shipping Information</strong>
+                        <br> 
+                    <div>
+                        <p class="text-sm font-medium text-gray-500">Address Line 1</p>
+                        <p class="text-lg font-semibold text-gray-800">
+                        {{ shipping_user.shipping_address1|default:"N/A" }}
+                        </p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-500">Address Line 2</p>
+                        <p class="text-lg font-semibold text-gray-800">
+                        {{ shipping_user.shipping_address2|default:"N/A" }}
+                        </p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-500">City</p>
+                        <p class="text-lg font-semibold text-gray-800">
+                        {{ shipping_user.shipping_city|default:"N/A" }}
+                        </p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-500">State/Province</p>
+                        <p class="text-lg font-semibold text-gray-800">
+                        {{ shipping_user.shipping_state|default:"N/A" }}
+                        </p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-500">ZIP/Postal Code</p>
+                        <p class="text-lg font-semibold text-gray-800">
+                        {{ shipping_user.shipping_zipcode|default:"N/A" }}
+                        </p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-500">Country</p>
+                        <p class="text-lg font-semibold text-gray-800">
+                        {{ shipping_user.shipping_country|default:"N/A" }}
+                        </p>
+                    </div>
+                    </div>
+                    {# ==== SHOW MORE TOGGLE END ==== #}
+                </div>
+
+                <div class="flex items-center space-x-4">
+                <a
+                href="{% url 'user_profile' %}?edit=true"
+                class="bg-indigo-600 text-white py-3 px-6 rounded-full text-lg font-semibold hover:bg-indigo-700 transition-colors duration-200 shadow-md transform hover:scale-105"
+                >
+                Edit Profile
+                </a>
+
+                <span class="text-gray-600 font-medium"><strong>OR</strong></span>
+
+                <a
+                href="{% url 'update_password' %}?edit=true"
+                class="bg-green-600 text-white py-3 px-6 rounded-full text-lg font-semibold hover:bg-green-700 transition-colors duration-200 shadow-md transform hover:scale-105"
+                >
+                Update Password
+                </a>
+                </div>
+
+            {% endif %}
+
+            <h2 class="text-3xl font-bold text-gray-800 mt-12 mb-6">Recent Orders</h2>
+
+            <div class="space-y-4">
+                <div class="bg-gray-50 rounded-lg p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between shadow-sm">
+                    <div>
+                        <p class="font-semibold text-gray-800">Order #ORD12345</p>
+                        <p class="text-sm text-gray-600">Date: 2025-05-28</p>
+                        <p class="text-sm text-gray-600">Total: $129.99</p>
+                    </div>
+                    <a href="#" class="text-indigo-600 hover:text-indigo-800 font-medium mt-2 sm:mt-0 rounded-md">View Details</a>
+                </div>
+                <div class="bg-gray-50 rounded-lg p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between shadow-sm">
+                    <div>
+                        <p class="font-semibold text-gray-800">Order #ORD12344</p>
+                        <p class="text-sm text-gray-600">Date: 2025-05-15</p>
+                        <p class="text-sm text-gray-600">Total: $274.50</p>
+                    </div>
+                    <a href="#" class="text-indigo-600 hover:text-indigo-800 font-medium mt-2 sm:mt-0 rounded-md">View Details</a>
+                </div>
             </div>
-        </main>
+        </section>
     </div>
-    <script>
+</main>
+<script>
   document.addEventListener('DOMContentLoaded', function(){
     const btn  = document.getElementById('toggle-more-btn');
     const info = document.getElementById('extra-info');
@@ -300,7 +275,4 @@
     }
   });
 </script>
-
-</body>
 {% endblock %}
-</html>
