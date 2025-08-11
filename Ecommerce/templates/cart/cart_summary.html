@@ -1,137 +1,132 @@
 {% extends 'base.html' %}
-
-{% block title %}Shopping Cart Page{% endblock %}
-
+{% block title %}Shopping Cart {% endblock %}
 {% block content %}
-<body class="antialiased">
-    <main class="flex-grow container mx-auto px-4 py-8">
-        <h1 class="text-4xl font-extrabold text-gray-800 mb-8 text-center">Your Shopping Cart</h1>
-
-        <div class="flex flex-col lg:flex-row gap-8">
-            <!-- Cart Items List Section -->
-            <div class="w-full lg:w-2/3 bg-white rounded-xl shadow-md p-6">
-                <!-- Individual Cart Item -->
-                {% if cart_products %}
-                {% for product in cart_products %}
-<div class="flex flex-col sm:flex-row items-center border-b border-gray-200 py-4 last:border-b-0">        
-    <img src="{{ product.image.url }}" alt="Product 1" class="w-24 h-24 object-cover rounded-lg mr-4 mb-4 sm:mb-0">
-    <div class="flex-grow text-center sm:text-left">
-        <h2 class="text-xl font-semibold text-gray-800">{{ product.name }}</h2>
-        <p class="text-gray-600">Color: {{ product.color }}</p>
-        <p class="text-lg font-bold text-indigo-600 mt-1">${{ product.price }}</p>
-    </div>
-    <div class="flex items-center space-x-3 mt-4 sm:mt-0">
-        <span class="uppercase text-sm font-medium text-gray-600">Quantity:</span>
-        <!-- Add data-product-id to wrapper for JS access -->
-        <div class="inline-flex items-center border border-gray-200 rounded-lg overflow-hidden" data-product-id="{{ product.id }}">
-            <button
-            class="px-3 py-1 text-lg font-bold text-gray-700 bg-gray-100 hover:bg-gray-200 transition-colors duration-200">
-            −
-            </button>
-            <input
-            class="qty-cart w-12 text-center text-xl font-semibold text-gray-800 bg-white focus:outline-none"
-            type="text"
-            value={% for key, value in quantities.items %}{% if key == product.id|slugify %}{{ value }}{% endif %}{% endfor %}
-            readonly
-            min="1"
-            data-product-id="{{ product.id }}"
-            />
-            <button
-            class="px-3 py-1 text-lg font-bold text-gray-700 bg-gray-100 hover:bg-gray-200 transition-colors duration-200">
-            +
-            </button>
-        </div>
-    </div>
-    <!-- Update button -->
-    <!-- Update button: add a unique class -->
-<button 
-    class="update-btn ml-4 sm:ml-6 mt-4 sm:mt-0 px-4 py-2 bg-blue-500 text-white font-medium rounded-lg shadow hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-colors duration-200"
-    data-product-id="{{ product.id }}">
-    Update
-</button>
-
-    <!-- Remove button -->
-   <!-- Remove button: just add the class, everything else untouched -->
-<button
-  class="remove-btn ml-4 sm:ml-6 text-red-500 hover:text-red-700 transition-colors duration-200 mt-4 sm:mt-0"
-  data-product-id="{{ product.id }}"
->
-  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-  </svg>
-</button>
-
-</div>
-{% endfor %}
-
-                <div class="flex flex-col sm:flex-row justify-between items-center mt-6 space-y-4 sm:space-y-0">
-                    <a href="{% url 'product_listing_page' %}" class="inline-block px-6 py-2 bg-indigo-600 text-white font-medium rounded-full shadow hover:bg-indigo-700 transition-colors duration-200">
-                        Continue Shopping
-                    </a>
-                    <button
-  class="clear-cart-btn text-gray-500 hover:text-gray-700 rounded-md"
-  data-action="post"
->
-  Clear Cart
-</button>
-
-
+<main class="flex-grow container mx-auto px-4 py-8">
+    <h1 class="text-4xl font-extrabold text-gray-800 mb-8 text-center">Your Shopping Cart</h1>
+    <div class="flex flex-col lg:flex-row gap-8">
+        <!-- Cart Items List Section -->
+        <div class="w-full lg:w-2/3 bg-white rounded-xl shadow-md p-6">
+            <!-- Individual Cart Item -->
+            {% if cart_products %}
+            {% for product in cart_products %}
+            <div class="flex flex-col sm:flex-row items-center border-b border-gray-200 py-4 last:border-b-0">        
+                <img src="{{ product.image.url }}" alt="Product 1" class="w-24 h-24 object-cover rounded-lg mr-4 mb-4 sm:mb-0">
+                <div class="flex-grow text-center sm:text-left">
+                    <h2 class="text-xl font-semibold text-gray-800">{{ product.name }}</h2>
+                    <p class="text-gray-600">Color: {{ product.color }}</p>
+                    <p class="text-lg font-bold text-indigo-600 mt-1">${{ product.price }}</p>
                 </div>
-                {% else %}
-                <div class="flex flex-col items-center justify-center py-16 space-y-6 border border-gray-200 rounded-lg bg-gray-50">
-                    <!-- Icon / Illustration -->
-                    <svg class="w-20 h-20 text-indigo-300 animate-pulse" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.2 6M17 13l1.2 6M6 21h12" />
-                    </svg>
+                <div class="flex items-center space-x-3 mt-4 sm:mt-0">
+                    <span class="uppercase text-sm font-medium text-gray-600">Quantity:</span>
+                    <!-- Add data-product-id to wrapper for JS access -->
+                    <div class="inline-flex items-center border border-gray-200 rounded-lg overflow-hidden" data-product-id="{{ product.id }}">
+                        <button
+                        class="px-3 py-1 text-lg font-bold text-gray-700 bg-gray-100 hover:bg-gray-200 transition-colors duration-200">
+                        −
+                        </button>
+                        <input
+                        class="qty-cart w-12 text-center text-xl font-semibold text-gray-800 bg-white focus:outline-none"
+                        type="text"
+                        value={% for key, value in quantities.items %}{% if key == product.id|slugify %}{{ value }}{% endif %}{% endfor %}
+                        readonly
+                        min="1"
+                        data-product-id="{{ product.id }}"
+                        />
+                        <button
+                        class="px-3 py-1 text-lg font-bold text-gray-700 bg-gray-100 hover:bg-gray-200 transition-colors duration-200">
+                        +
+                        </button>
+                    </div>
+                </div>
+                <!-- Update button -->
+                <!-- Update button: add a unique class -->
+            <button 
+                class="update-btn ml-4 sm:ml-6 mt-4 sm:mt-0 px-4 py-2 bg-blue-500 text-white font-medium rounded-lg shadow hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-colors duration-200"
+                data-product-id="{{ product.id }}">
+                Update
+            </button>
 
-                    <!-- Heading -->
-                    <h3 class="text-2xl font-semibold text-gray-700">Your cart is empty</h3>
+                <!-- Remove button -->
+              <!-- Remove button: just add the class, everything else untouched -->
+            <button
+              class="remove-btn ml-4 sm:ml-6 text-red-500 hover:text-red-700 transition-colors duration-200 mt-4 sm:mt-0"
+              data-product-id="{{ product.id }}"
+            >
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+              </svg>
+            </button>
 
-                    <!-- Subtext -->
-                    <p class="text-gray-500 max-w-xs text-center">
-                    Looks like you haven’t added anything to your cart yet. Start browsing our products and find something you’ll love!
-                    </p>
+            </div>
+            {% endfor %}
 
-                    <!-- Call-to-Action -->
-                    <a href="{% url 'product_listing_page' %}"
-                    class="inline-block px-6 py-2 bg-indigo-600 text-white font-medium rounded-full shadow hover:bg-indigo-700 transition-colors duration-200">
+            <div class="flex flex-col sm:flex-row justify-between items-center mt-6 space-y-4 sm:space-y-0">
+                <a href="{% url 'product_listing_page' %}" class="inline-block px-6 py-2 bg-indigo-600 text-white font-medium rounded-full shadow hover:bg-indigo-700 transition-colors duration-200">
                     Continue Shopping
-                    </a>
-                </div>
-                {% endif %}
-            </div>
+                </a>
+                <button
+class="clear-cart-btn text-gray-500 hover:text-gray-700 rounded-md"
+data-action="post"
+>
+Clear Cart
+</button>
 
-            <!-- Order Summary Section -->
-            <div class="w-full lg:w-1/3 bg-white rounded-xl shadow-md p-6 h-fit lg:sticky lg:top-8">
-                <h2 class="text-2xl font-bold text-gray-800 mb-6">Order Summary</h2>
-                <div class="space-y-3 mb-6">
-                    <div class="flex justify-between text-gray-700">
-                        <span>Subtotal</span>
-                        <span>${{ totals }}</span>
-                    </div>
-                    <div class="flex justify-between text-gray-700">
-                        <span>Shipping</span>
-                        <span>$10.00</span>
-                    </div>
-                    <div class="flex justify-between text-gray-700">
-                        <span>Tax (5%)</span>
-                        <span>$0</span>
-                    </div>
-                    <div class="flex justify-between font-bold text-xl text-gray-800 border-t border-gray-200 pt-4">
-                        <span>Total</span>
-                        <span>${{ grand_total }}</span>
-                    </div>
-                </div>
 
-                <a href="{% url 'checkout' %}" role="button" class="block w-full bg-indigo-600 text-white py-4 rounded-full text-lg font-semibold hover:bg-indigo-700 transition-colors duration-200 shadow-lg transform hover:scale-105 text-center">
-                  Proceed to Checkout
-                </a>             
             </div>
+            {% else %}
+            <div class="flex flex-col items-center justify-center py-16 space-y-6 border border-gray-200 rounded-lg bg-gray-50">
+                <!-- Icon / Illustration -->
+                <svg class="w-20 h-20 text-indigo-300 animate-pulse" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.2 6M17 13l1.2 6M6 21h12" />
+                </svg>
+
+                <!-- Heading -->
+                <h3 class="text-2xl font-semibold text-gray-700">Your cart is empty</h3>
+
+                <!-- Subtext -->
+                <p class="text-gray-500 max-w-xs text-center">
+                Looks like you haven’t added anything to your cart yet. Start browsing our products and find something you’ll love!
+                </p>
+
+                <!-- Call-to-Action -->
+                <a href="{% url 'product_listing_page' %}"
+                class="inline-block px-6 py-2 bg-indigo-600 text-white font-medium rounded-full shadow hover:bg-indigo-700 transition-colors duration-200">
+                Continue Shopping
+                </a>
+            </div>
+            {% endif %}
         </div>
-    </main>
-</body>
+
+        <!-- Order Summary Section -->
+        <div class="w-full lg:w-1/3 bg-white rounded-xl shadow-md p-6 h-fit lg:sticky lg:top-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">Order Summary</h2>
+            <div class="space-y-3 mb-6">
+                <div class="flex justify-between text-gray-700">
+                    <span>Subtotal</span>
+                    <span>${{ totals }}</span>
+                </div>
+                <div class="flex justify-between text-gray-700">
+                    <span>Shipping</span>
+                    <span>$10.00</span>
+                </div>
+                <div class="flex justify-between text-gray-700">
+                    <span>Tax (5%)</span>
+                    <span>$0</span>
+                </div>
+                <div class="flex justify-between font-bold text-xl text-gray-800 border-t border-gray-200 pt-4">
+                    <span>Total</span>
+                    <span>${{ grand_total }}</span>
+                </div>
+            </div>
+
+            <a href="{% url 'checkout' %}" role="button" class="block w-full bg-indigo-600 text-white py-4 rounded-full text-lg font-semibold hover:bg-indigo-700 transition-colors duration-200 shadow-lg transform hover:scale-105 text-center">
+              Proceed to Checkout
+            </a>             
+        </div>
+    </div>
+</main>
 <script>
   $(function(){
     // For each quantity picker group
@@ -230,6 +225,4 @@ $(document).on('click', '.clear-cart-btn', function(e) {
   });
 });
 </script>
-
 {% endblock %}
-</html>
