@@ -61,7 +61,7 @@ def product_listing_page(request):
         if selected_categories:
             product_all = product_all.filter(category__name__in=selected_categories)
 
-        paginator = Paginator(product_all, 6)
+        paginator = Paginator(product_all, 3)
         page_number = request.GET.get('page')
 
         try:

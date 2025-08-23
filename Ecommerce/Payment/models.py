@@ -38,22 +38,6 @@ class Order(models.Model):
     date_ordered = models.DateTimeField(auto_now_add=True)
     shipped = models.BooleanField(default=False)
     date_shipped = models.DateTimeField(blank=True, null=True)
-    
-    # id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    # status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
-    # items = models.JSONField(
-    #     help_text='[{"product_id": ..., "quantity": ..., "price": ...}, ...]',
-    #     default=list,
-    #     blank=True
-    # )
-    # updated_at = models.DateTimeField(auto_now=True)
-
-    # def save(self, *args, **kwargs):
-    #     total = 0
-    #     for item in self.items or []:
-    #         total += item.get('quantity', 0) * item.get('price', 0)
-    #     self.total_price = total
-    #     super().save(*args, **kwargs)
 
     def __str__(self):
         return f"Order - {str(self.id)}"
@@ -71,6 +55,9 @@ class OrderItems(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     quantity = models.PositiveBigIntegerField(default=1)
     price = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def subtotal_product(self):
+        return self.price * self.quantity
 
     def __str__(self):
         return f'Order Item - {str(self.id)}'

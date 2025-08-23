@@ -5,12 +5,35 @@ from Payment.forms import ShippingForm, PaymentForm
 from Payment.models import ShippingAddress, Order, OrderItems
 from django.contrib import messages
 from django.contrib.auth.models import User
-from Products.models import Product
+from Products.models import Product, Profile
+import datetime
 
 
+def orders(request, pk):
+    if request.user.is_authenticated and request.user.is_superuser:
+        order = Order.objects.get(id=pk)
+        items = OrderItems.objects.filter(order=pk)
+        price_without_shipping = order.amount_paid - 10
+        if request.POST:
+            status = request.POST['shipping_status']
+            if status == "true":
+                order = Order.objects.filter(id=pk)
+                now = datetime.datetime.now()
+                order.update(shipped=True, date_shipped=now)
+            else:
+                order = Order.objects.filter(id=pk)
+                order.update(shipped=False)
+            messages.success(request, "Shipping Status Updated")
+            return redirect('dashboard')
+        return render(request, 'payment/orders.html', {'order':order, 'items':items, 'price_without_shipping':price_without_shipping})
+    else:
+        messages.success(request, 'Access Denied')
+        return redirect('home')
 def dashboard(request):
     if request.user.is_authenticated and request.user.is_superuser:
-        return render(request, 'payment/dashboard.html', {'show_aside': True})
+        order_not_yet = Order.objects.filter(shipped=False)
+        order_done = Order.objects.filter(shipped=True)
+        return render(request, 'payment/dashboard.html', {'show_aside': True, 'order_done':order_done, 'order_not_yet':order_not_yet})
     else:
         messages.success(request, 'Access Denied')
         return redirect('home')
@@ -23,6 +46,8 @@ def billing_info(request):
         grand_total = totals + Decimal("10.00")
         if totals == 0:
             grand_total = 0
+            messages.success(request, 'Access Denied! \n No Product to bye!')
+            return redirect('checkout')
     # --- Add this new logic ---
         products_with_line_totals = []
         for product in cart_products:
@@ -46,8 +71,6 @@ def billing_info(request):
             return render(request, "payment/billing_info.html", {'cart_products':cart_products, 'quantities':quantities, 'totals':totals, 'shipping_info':request.POST, 'grand_total':grand_total, 'products_with_line_totals':products_with_line_totals, "form": PaymentForm()})
         else:
             return render(request, "payment/billing_info.html", {'cart_products':cart_products, 'quantities':quantities, 'totals':totals, 'shipping_info':request.POST, 'grand_total':grand_total, 'products_with_line_totals':products_with_line_totals, "form": PaymentForm()})
-        shipping_form = request.POST
-        return render(request, "payment/billing_info.html", {'cart_products':cart_products, 'quantities':quantities, 'totals':totals, 'shipping_form':shipping_form, 'grand_total':grand_total, 'products_with_line_totals':products_with_line_totals})
     else:
         messages.success(request, 'Access Denied')
         return redirect('home')
@@ -135,6 +158,8 @@ def process_order(request):
             for key in list(request.session.keys()):
                 if key == "session_key":
                     del request.session[key]
+            current_user = Profile.objects.filter(user__id=request.user.id)
+            current_user.update(old_cart="")
             messages.success(request, 'Order placed!')
             return redirect('home')
         else:
@@ -157,7 +182,6 @@ def process_order(request):
     else:
         messages.success(request, 'Access Denied')
         return redirect('home')
-    return render(request, "payment/process_order.html", {})
 def payment_success(request):
 
     return render(request, "payment/payment_success.html", {})
